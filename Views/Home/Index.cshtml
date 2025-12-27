@@ -1,0 +1,151 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="text-center py-5">
+        <h1 class="display-3 fw-bold text-primary">
+            <i class="bi bi-book-fill"></i> Library Management System
+        </h1>
+        <p class="lead text-muted">Your complete solution for managing library operations</p>
+        
+        @if (!User.Identity!.IsAuthenticated)
+        {
+            <div class="mt-4">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">
+                    <i class="bi bi-person-plus"></i> Get Started
+                </a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="mt-4">
+                <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-lg">
+                    <i class="bi bi-book"></i> Browse Books
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-book-half" style="font-size: 3rem; color: #0d6efd;"></i>
+                    <h3 class="card-title mt-3">Book Management</h3>
+                    <p class="card-text">Comprehensive catalog of books with search, filter, and categorization features.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-people-fill" style="font-size: 3rem; color: #198754;"></i>
+                    <h3 class="card-title mt-3">User Management</h3>
+                    <p class="card-text">Secure authentication and role-based access control for members and staff.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-journal-check" style="font-size: 3rem; color: #ffc107;"></i>
+                    <h3 class="card-title mt-3">Loan Tracking</h3>
+                    <p class="card-text">Track book loans, due dates, returns, and manage late fees efficiently.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Section (for authenticated users) -->
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="text-center mb-4">Quick Access</h2>
+            </div>
+            <div class="col-md-3">
+                <a asp-controller="Books" asp-action="Index" class="text-decoration-none">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body text-center">
+                            <i class="bi bi-book" style="font-size: 2rem;"></i>
+                            <h5 class="card-title mt-2">Browse Books</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+            {
+                <div class="col-md-3">
+                    <a asp-controller="Books" asp-action="Create" class="text-decoration-none">
+                        <div class="card text-white bg-success mb-3">
+                            <div class="card-body text-center">
+                                <i class="bi bi-plus-circle" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">Add Book</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-3">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="text-decoration-none">
+                        <div class="card text-white bg-warning mb-3">
+                            <div class="card-body text-center">
+                                <i class="bi bi-speedometer2" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">Dashboard</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-controller="Admin" asp-action="Categories" class="text-decoration-none">
+                        <div class="card text-white bg-info mb-3">
+                            <div class="card-body text-center">
+                                <i class="bi bi-tags" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">Categories</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Technology Stack -->
+    <div class="row mt-5 mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Built With Modern Technology</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <h5>ASP.NET Core 9</h5>
+                            <p class="text-muted">MVC Framework</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Entity Framework</h5>
+                            <p class="text-muted">ORM & Database</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Bootstrap 5</h5>
+                            <p class="text-muted">Responsive UI</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>jQuery AJAX</h5>
+                            <p class="text-muted">Dynamic Updates</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

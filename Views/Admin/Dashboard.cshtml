@@ -1,0 +1,203 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Admin Dashboard</h1>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Books</h5>
+                    <h2 id="totalBooks">@ViewBag.TotalBooks</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <h2 id="totalUsers">@ViewBag.TotalUsers</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Active Loans</h5>
+                    <h2 id="activeLoans">@ViewBag.ActiveLoans</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Overdue Loans</h5>
+                    <h2 id="overdueLoans">@ViewBag.OverdueLoans</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refresh Statistics Button -->
+    <div class="mb-3">
+        <button id="refreshStats" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise"></i> Refresh Statistics
+        </button>
+    </div>
+
+    <!-- Overdue Loans Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Overdue Loans</h4>
+        </div>
+        <div class="card-body">
+            <button id="loadOverdueLoans" class="btn btn-warning mb-3">Load Overdue Loans</button>
+            <div id="overdueLoansList">
+                <p class="text-muted">Click the button above to load overdue loans.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-0">Quick Actions</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <a asp-controller="Books" asp-action="Index" class="btn btn-outline-primary w-100 mb-2">
+                        <i class="bi bi-book"></i> Manage Books
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-action="Users" class="btn btn-outline-success w-100 mb-2">
+                        <i class="bi bi-people"></i> Manage Users
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-action="Loans" class="btn btn-outline-info w-100 mb-2">
+                        <i class="bi bi-journal-check"></i> Manage Loans
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-action="Categories" class="btn btn-outline-warning w-100 mb-2">
+                        <i class="bi bi-tags"></i> Manage Categories
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Refresh statistics using AJAX
+            $('#refreshStats').click(function () {
+                $.ajax({
+                    url: '@Url.Action("GetStatistics", "Admin")',
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#totalBooks').text(response.statistics.totalBooks);
+                            $('#totalUsers').text(response.statistics.totalUsers);
+                            $('#activeLoans').text(response.statistics.activeLoans);
+                            $('#overdueLoans').text(response.statistics.overdueLoans);
+                            
+                            // Show success message
+                            showAlert('Statistics refreshed successfully!', 'success');
+                        }
+                    },
+                    error: function () {
+                        showAlert('Failed to refresh statistics', 'danger');
+                    }
+                });
+            });
+
+            // Load overdue loans using AJAX
+            $('#loadOverdueLoans').click(function () {
+                $.ajax({
+                    url: '@Url.Action("GetOverdueLoans", "Admin")',
+                    type: 'GET',
+                    beforeSend: function () {
+                        $('#overdueLoansList').html('<div class="text-center"><div class="spinner-border" role="status"></div></div>');
+                    },
+                    success: function (response) {
+                        if (response.success && response.loans.length > 0) {
+                            let html = '<div class="table-responsive"><table class="table table-striped">';
+                            html += '<thead><tr><th>Book</th><th>User</th><th>Due Date</th><th>Days Overdue</th><th>Action</th></tr></thead><tbody>';
+                            
+                            response.loans.forEach(function (loan) {
+                                html += '<tr>';
+                                html += '<td>' + loan.bookTitle + '</td>';
+                                html += '<td>' + loan.userName + '<br/><small>' + loan.userEmail + '</small></td>';
+                                html += '<td>' + loan.dueDate + '</td>';
+                                html += '<td><span class="badge bg-danger">' + loan.daysOverdue + ' days</span></td>';
+                                html += '<td><button class="btn btn-sm btn-success return-book" data-loan-id="' + loan.loanId + '">Return</button></td>';
+                                html += '</tr>';
+                            });
+                            
+                            html += '</tbody></table></div>';
+                            $('#overdueLoansList').html(html);
+                        } else {
+                            $('#overdueLoansList').html('<div class="alert alert-success">No overdue loans found!</div>');
+                        }
+                    },
+                    error: function () {
+                        $('#overdueLoansList').html('<div class="alert alert-danger">Failed to load overdue loans</div>');
+                    }
+                });
+            });
+
+            // Return book using AJAX
+            $(document).on('click', '.return-book', function () {
+                const loanId = $(this).data('loan-id');
+                const button = $(this);
+                
+                if (confirm('Are you sure you want to mark this book as returned?')) {
+                    $.ajax({
+                        url: '@Url.Action("ReturnBook", "Admin")',
+                        type: 'POST',
+                        data: { loanId: loanId },
+                        beforeSend: function () {
+                            button.prop('disabled', true).text('Processing...');
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showAlert('Book returned successfully! Late fee: $' + response.lateFee, 'success');
+                                button.closest('tr').fadeOut();
+                                $('#refreshStats').click(); // Refresh statistics
+                            } else {
+                                showAlert(response.message, 'danger');
+                                button.prop('disabled', false).text('Return');
+                            }
+                        },
+                        error: function () {
+                            showAlert('Failed to return book', 'danger');
+                            button.prop('disabled', false).text('Return');
+                        }
+                    });
+                }
+            });
+
+            // Helper function to show alerts
+            function showAlert(message, type) {
+                const alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    '</div>';
+                
+                $('.container').prepend(alertHtml);
+                
+                setTimeout(function () {
+                    $('.alert').fadeOut();
+                }, 3000);
+            }
+        });
+    </script>
+}
+

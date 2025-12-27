@@ -1,0 +1,28 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace LibraryManagementSystem.Models
+{
+    // Junction table for many-to-many relationship between Books and Authors
+    public class BookAuthor
+    {
+        [Key]
+        public int BookAuthorId { get; set; }
+
+        [Required]
+        public int BookId { get; set; }
+
+        [Required]
+        public int AuthorId { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation properties
+        [ForeignKey("BookId")]
+        public virtual Book Book { get; set; } = null!;
+
+        [ForeignKey("AuthorId")]
+        public virtual Author Author { get; set; } = null!;
+    }
+}
+

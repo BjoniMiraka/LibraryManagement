@@ -1,0 +1,113 @@
+@model LibraryManagementSystem.Models.Book
+
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+            {
+                <img src="@Model.CoverImageUrl" class="img-fluid rounded shadow" alt="@Model.Title" />
+            }
+            else
+            {
+                <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded shadow" style="height: 400px;">
+                    <i class="bi bi-book" style="font-size: 6rem;"></i>
+                </div>
+            }
+            
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5>Availability</h5>
+                    @if (Model.AvailableCopies > 0)
+                    {
+                        <span class="badge bg-success fs-6">Available</span>
+                        <p class="mt-2">@Model.AvailableCopies of @Model.TotalCopies copies available</p>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger fs-6">Not Available</span>
+                        <p class="mt-2">All @Model.TotalCopies copies are currently on loan</p>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <h1>@Model.Title</h1>
+            <hr />
+            
+            <dl class="row">
+                <dt class="col-sm-3">ISBN</dt>
+                <dd class="col-sm-9">@Model.ISBN</dd>
+                
+                <dt class="col-sm-3">Category</dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-primary">@Model.Category.Name</span>
+                </dd>
+                
+                <dt class="col-sm-3">Publisher</dt>
+                <dd class="col-sm-9">@Model.Publisher.Name</dd>
+                
+                <dt class="col-sm-3">Published Year</dt>
+                <dd class="col-sm-9">@Model.PublishedYear</dd>
+                
+                @if (Model.BookAuthors.Any())
+                {
+                    <dt class="col-sm-3">Authors</dt>
+                    <dd class="col-sm-9">
+                        @string.Join(", ", Model.BookAuthors.Select(ba => ba.Author.FullName))
+                    </dd>
+                }
+                
+                <dt class="col-sm-3">Total Copies</dt>
+                <dd class="col-sm-9">@Model.TotalCopies</dd>
+                
+                <dt class="col-sm-3">Available Copies</dt>
+                <dd class="col-sm-9">@Model.AvailableCopies</dd>
+                
+                <dt class="col-sm-3">Created At</dt>
+                <dd class="col-sm-9">@Model.CreatedAt.ToString("MMMM dd, yyyy")</dd>
+                
+                @if (Model.UpdatedAt.HasValue)
+                {
+                    <dt class="col-sm-3">Last Updated</dt>
+                    <dd class="col-sm-9">@Model.UpdatedAt.Value.ToString("MMMM dd, yyyy")</dd>
+                }
+            </dl>
+            
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Description</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>@Model.Description</p>
+                    </div>
+                </div>
+            }
+            
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+                @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Delete
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
