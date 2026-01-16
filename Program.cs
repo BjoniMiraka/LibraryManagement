@@ -156,40 +156,64 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
         return; // Database already seeded
     }
 
-    // Seed Categories
-    var categories = new[]
+    // Seed Categories (only if they don't exist)
+    Category[] categories;
+    if (!context.Categories.Any())
     {
-        new Category { Name = "Fiction", Description = "Fictional stories and novels", CreatedAt = DateTime.UtcNow },
-        new Category { Name = "Non-Fiction", Description = "Real-world topics and facts", CreatedAt = DateTime.UtcNow },
-        new Category { Name = "Science", Description = "Scientific books and research", CreatedAt = DateTime.UtcNow },
-        new Category { Name = "History", Description = "Historical events and figures", CreatedAt = DateTime.UtcNow },
-        new Category { Name = "Technology", Description = "Technology and programming", CreatedAt = DateTime.UtcNow }
-    };
-    context.Categories.AddRange(categories);
-    await context.SaveChangesAsync();
+        categories = new[]
+        {
+            new Category { Name = "Fiction", Description = "Fictional stories and novels", CreatedAt = DateTime.UtcNow },
+            new Category { Name = "Non-Fiction", Description = "Real-world topics and facts", CreatedAt = DateTime.UtcNow },
+            new Category { Name = "Science", Description = "Scientific books and research", CreatedAt = DateTime.UtcNow },
+            new Category { Name = "History", Description = "Historical events and figures", CreatedAt = DateTime.UtcNow },
+            new Category { Name = "Technology", Description = "Technology and programming", CreatedAt = DateTime.UtcNow }
+        };
+        context.Categories.AddRange(categories);
+        await context.SaveChangesAsync();
+    }
+    else
+    {
+        categories = context.Categories.ToArray();
+    }
 
-    // Seed Publishers
-    var publishers = new[]
+    // Seed Publishers (only if they don't exist)
+    Publisher[] publishers;
+    if (!context.Publishers.Any())
     {
-        new Publisher { Name = "Penguin Books", Address = "New York, USA", Email = "info@penguin.com", Phone = "+1-555-0100", CreatedAt = DateTime.UtcNow },
-        new Publisher { Name = "HarperCollins", Address = "London, UK", Email = "info@harpercollins.com", Phone = "+44-20-8741-7070", CreatedAt = DateTime.UtcNow },
-        new Publisher { Name = "Random House", Address = "New York, USA", Email = "info@randomhouse.com", Phone = "+1-555-0200", CreatedAt = DateTime.UtcNow },
-        new Publisher { Name = "O'Reilly Media", Address = "California, USA", Email = "info@oreilly.com", Phone = "+1-555-0300", CreatedAt = DateTime.UtcNow }
-    };
-    context.Publishers.AddRange(publishers);
-    await context.SaveChangesAsync();
+        publishers = new[]
+        {
+            new Publisher { Name = "Penguin Books", Address = "New York, USA", Email = "info@penguin.com", Phone = "+1-555-0100", CreatedAt = DateTime.UtcNow },
+            new Publisher { Name = "HarperCollins", Address = "London, UK", Email = "info@harpercollins.com", Phone = "+44-20-8741-7070", CreatedAt = DateTime.UtcNow },
+            new Publisher { Name = "Random House", Address = "New York, USA", Email = "info@randomhouse.com", Phone = "+1-555-0200", CreatedAt = DateTime.UtcNow },
+            new Publisher { Name = "O'Reilly Media", Address = "California, USA", Email = "info@oreilly.com", Phone = "+1-555-0300", CreatedAt = DateTime.UtcNow }
+        };
+        context.Publishers.AddRange(publishers);
+        await context.SaveChangesAsync();
+    }
+    else
+    {
+        publishers = context.Publishers.ToArray();
+    }
 
-    // Seed Authors
-    var authors = new[]
+    // Seed Authors (only if they don't exist)
+    Author[] authors;
+    if (!context.Authors.Any())
     {
-        new Author { FirstName = "George", LastName = "Orwell", Biography = "English novelist and essayist", Country = "United Kingdom", DateOfBirth = new DateTime(1903, 6, 25), CreatedAt = DateTime.UtcNow },
-        new Author { FirstName = "Jane", LastName = "Austen", Biography = "English novelist", Country = "United Kingdom", DateOfBirth = new DateTime(1775, 12, 16), CreatedAt = DateTime.UtcNow },
-        new Author { FirstName = "Stephen", LastName = "Hawking", Biography = "Theoretical physicist and cosmologist", Country = "United Kingdom", DateOfBirth = new DateTime(1942, 1, 8), CreatedAt = DateTime.UtcNow },
-        new Author { FirstName = "Yuval Noah", LastName = "Harari", Biography = "Israeli historian and philosopher", Country = "Israel", DateOfBirth = new DateTime(1976, 2, 24), CreatedAt = DateTime.UtcNow },
-        new Author { FirstName = "Robert C.", LastName = "Martin", Biography = "Software engineer and author", Country = "United States", DateOfBirth = new DateTime(1952, 12, 5), CreatedAt = DateTime.UtcNow }
-    };
-    context.Authors.AddRange(authors);
-    await context.SaveChangesAsync();
+        authors = new[]
+        {
+            new Author { FirstName = "George", LastName = "Orwell", Biography = "English novelist and essayist", Country = "United Kingdom", DateOfBirth = new DateTime(1903, 6, 25), CreatedAt = DateTime.UtcNow },
+            new Author { FirstName = "Jane", LastName = "Austen", Biography = "English novelist", Country = "United Kingdom", DateOfBirth = new DateTime(1775, 12, 16), CreatedAt = DateTime.UtcNow },
+            new Author { FirstName = "Stephen", LastName = "Hawking", Biography = "Theoretical physicist and cosmologist", Country = "United Kingdom", DateOfBirth = new DateTime(1942, 1, 8), CreatedAt = DateTime.UtcNow },
+            new Author { FirstName = "Yuval Noah", LastName = "Harari", Biography = "Israeli historian and philosopher", Country = "Israel", DateOfBirth = new DateTime(1976, 2, 24), CreatedAt = DateTime.UtcNow },
+            new Author { FirstName = "Robert C.", LastName = "Martin", Biography = "Software engineer and author", Country = "United States", DateOfBirth = new DateTime(1952, 12, 5), CreatedAt = DateTime.UtcNow }
+        };
+        context.Authors.AddRange(authors);
+        await context.SaveChangesAsync();
+    }
+    else
+    {
+        authors = context.Authors.ToArray();
+    }
 
     // Seed Books
     var books = new[]
