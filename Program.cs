@@ -204,7 +204,6 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             new Author { FirstName = "George", LastName = "Orwell", Biography = "English novelist and essayist", Country = "United Kingdom", DateOfBirth = new DateTime(1903, 6, 25), CreatedAt = DateTime.UtcNow },
             new Author { FirstName = "Jane", LastName = "Austen", Biography = "English novelist", Country = "United Kingdom", DateOfBirth = new DateTime(1775, 12, 16), CreatedAt = DateTime.UtcNow },
             new Author { FirstName = "Stephen", LastName = "Hawking", Biography = "Theoretical physicist and cosmologist", Country = "United Kingdom", DateOfBirth = new DateTime(1942, 1, 8), CreatedAt = DateTime.UtcNow },
-            new Author { FirstName = "Yuval Noah", LastName = "Harari", Biography = "Israeli historian and philosopher", Country = "Israel", DateOfBirth = new DateTime(1976, 2, 24), CreatedAt = DateTime.UtcNow },
             new Author { FirstName = "Robert C.", LastName = "Martin", Biography = "Software engineer and author", Country = "United States", DateOfBirth = new DateTime(1952, 12, 5), CreatedAt = DateTime.UtcNow }
         };
         context.Authors.AddRange(authors);
@@ -214,6 +213,11 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
     {
         authors = context.Authors.ToArray();
     }
+
+    // Create lookup dictionaries for clean access
+    var categoryLookup = categories.ToDictionary(c => c.Name);
+    var publisherLookup = publishers.ToDictionary(p => p.Name);
+    var authorLookup = authors.ToDictionary(a => a.LastName);
 
     // Seed Books
     var books = new[]
@@ -226,8 +230,8 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             Description = "A dystopian social science fiction novel and cautionary tale about the dangers of totalitarianism.",
             TotalCopies = 5,
             AvailableCopies = 5,
-            CategoryId = categories[0].CategoryId,
-            PublisherId = publishers[0].PublisherId,
+            CategoryId = categoryLookup["Fiction"].CategoryId,
+            PublisherId = publisherLookup["Penguin Books"].PublisherId,
             CoverImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71kxa1-0mfL.jpg",
             CreatedAt = DateTime.UtcNow
         },
@@ -239,8 +243,8 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             Description = "A romantic novel of manners that follows the character development of Elizabeth Bennet.",
             TotalCopies = 4,
             AvailableCopies = 4,
-            CategoryId = categories[0].CategoryId,
-            PublisherId = publishers[1].PublisherId,
+            CategoryId = categoryLookup["Fiction"].CategoryId,
+            PublisherId = publisherLookup["HarperCollins"].PublisherId,
             CoverImageUrl = "https://i.pinimg.com/736x/83/75/0d/83750d3697667a9c6efbc66466504618.jpg",
             CreatedAt = DateTime.UtcNow
         },
@@ -252,22 +256,9 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             Description = "A landmark volume in science writing by one of the great minds of our time, Stephen Hawking.",
             TotalCopies = 3,
             AvailableCopies = 3,
-            CategoryId = categories[2].CategoryId,
-            PublisherId = publishers[2].PublisherId,
+            CategoryId = categoryLookup["Science"].CategoryId,
+            PublisherId = publisherLookup["Penguin Books"].PublisherId,
             CoverImageUrl = "https://i.pinimg.com/736x/72/dd/ed/72ddedc722a7dd7cc31c5579712f93db.jpg",
-            CreatedAt = DateTime.UtcNow
-        },
-        new Book
-        {
-            Title = "Sapiens: A Brief History of Humankind",
-            ISBN = "978-0062316097",
-            PublishedYear = 2011,
-            Description = "Explores the history of humankind from the Stone Age to the modern age.",
-            TotalCopies = 6,
-            AvailableCopies = 6,
-            CategoryId = categories[3].CategoryId,
-            PublisherId = publishers[1].PublisherId,
-            CoverImageUrl = "https://i.pinimg.com/736x/81/fd/76/81fd7632c4ed22b07b60e4ba663da153.jpg",
             CreatedAt = DateTime.UtcNow
         },
         new Book
@@ -278,8 +269,8 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             Description = "A Handbook of Agile Software Craftsmanship with practical advice on writing clean, maintainable code.",
             TotalCopies = 4,
             AvailableCopies = 1,
-            CategoryId = categories[4].CategoryId,
-            PublisherId = publishers[3].PublisherId,
+            CategoryId = categoryLookup["Technology"].CategoryId,
+            PublisherId = publisherLookup["O'Reilly Media"].PublisherId,
             CoverImageUrl = "https://i.pinimg.com/1200x/46/9c/88/469c88b9354e6ea64cd46a4669993736.jpg",
             CreatedAt = DateTime.UtcNow
         },
@@ -291,8 +282,8 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             Description = "A satirical allegorical novella reflecting events leading up to the Russian Revolution.",
             TotalCopies = 5,
             AvailableCopies = 2,
-            CategoryId = categories[0].CategoryId,
-            PublisherId = publishers[0].PublisherId,
+            CategoryId = categoryLookup["Fiction"].CategoryId,
+            PublisherId = publisherLookup["Penguin Books"].PublisherId,
             CoverImageUrl = "https://i.pinimg.com/736x/15/ce/ec/15ceec007d0cb25fc13adbbf07bc89d4.jpg",
             CreatedAt = DateTime.UtcNow
         }
@@ -303,12 +294,11 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
     // Seed BookAuthors (relationships)
     var bookAuthors = new[]
     {
-        new BookAuthor { BookId = books[0].BookId, AuthorId = authors[0].AuthorId, CreatedAt = DateTime.UtcNow }, // 1984 - George Orwell
-        new BookAuthor { BookId = books[1].BookId, AuthorId = authors[1].AuthorId, CreatedAt = DateTime.UtcNow }, // Pride and Prejudice - Jane Austen
-        new BookAuthor { BookId = books[2].BookId, AuthorId = authors[2].AuthorId, CreatedAt = DateTime.UtcNow }, // A Brief History of Time - Stephen Hawking
-        new BookAuthor { BookId = books[3].BookId, AuthorId = authors[3].AuthorId, CreatedAt = DateTime.UtcNow }, // Sapiens - Yuval Noah Harari
-        new BookAuthor { BookId = books[4].BookId, AuthorId = authors[4].AuthorId, CreatedAt = DateTime.UtcNow }, // Clean Code - Robert C. Martin
-        new BookAuthor { BookId = books[5].BookId, AuthorId = authors[0].AuthorId, CreatedAt = DateTime.UtcNow }  // Animal Farm - George Orwell
+        new BookAuthor { BookId = books[0].BookId, AuthorId = authorLookup["Orwell"].AuthorId, CreatedAt = DateTime.UtcNow }, // 1984 - George Orwell
+        new BookAuthor { BookId = books[1].BookId, AuthorId = authorLookup["Austen"].AuthorId, CreatedAt = DateTime.UtcNow }, // Pride and Prejudice - Jane Austen
+        new BookAuthor { BookId = books[2].BookId, AuthorId = authorLookup["Hawking"].AuthorId, CreatedAt = DateTime.UtcNow }, // A Brief History of Time - Stephen Hawking
+        new BookAuthor { BookId = books[3].BookId, AuthorId = authorLookup["Martin"].AuthorId, CreatedAt = DateTime.UtcNow }, // Clean Code - Robert C. Martin
+        new BookAuthor { BookId = books[4].BookId, AuthorId = authorLookup["Orwell"].AuthorId, CreatedAt = DateTime.UtcNow }  // Animal Farm - George Orwell
     };
     context.BookAuthors.AddRange(bookAuthors);
     await context.SaveChangesAsync();
