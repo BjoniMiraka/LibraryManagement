@@ -241,7 +241,7 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             AvailableCopies = 4,
             CategoryId = categories[0].CategoryId,
             PublisherId = publishers[1].PublisherId,
-            CoverImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71Q1tPupKjL.jpg",
+            CoverImageUrl = "https://i.pinimg.com/736x/83/75/0d/83750d3697667a9c6efbc66466504618.jpg",
             CreatedAt = DateTime.UtcNow
         },
         new Book
@@ -254,7 +254,7 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             AvailableCopies = 3,
             CategoryId = categories[2].CategoryId,
             PublisherId = publishers[2].PublisherId,
-            CoverImageUrl = "https://images-na.ssl-images-amazon.com/images/I/81SbcDjN5LL.jpg",
+            CoverImageUrl = "https://i.pinimg.com/736x/72/dd/ed/72ddedc722a7dd7cc31c5579712f93db.jpg",
             CreatedAt = DateTime.UtcNow
         },
         new Book
@@ -267,7 +267,7 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             AvailableCopies = 6,
             CategoryId = categories[3].CategoryId,
             PublisherId = publishers[1].PublisherId,
-            CoverImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71f5Yqd9fdL.jpg",
+            CoverImageUrl = "https://i.pinimg.com/736x/81/fd/76/81fd7632c4ed22b07b60e4ba663da153.jpg",
             CreatedAt = DateTime.UtcNow
         },
         new Book
@@ -277,10 +277,10 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             PublishedYear = 2008,
             Description = "A Handbook of Agile Software Craftsmanship with practical advice on writing clean, maintainable code.",
             TotalCopies = 4,
-            AvailableCopies = 4,
+            AvailableCopies = 1,
             CategoryId = categories[4].CategoryId,
             PublisherId = publishers[3].PublisherId,
-            CoverImageUrl = "https://images-na.ssl-images-amazon.com/images/I/41xShlnTZTL.jpg",
+            CoverImageUrl = "https://i.pinimg.com/1200x/46/9c/88/469c88b9354e6ea64cd46a4669993736.jpg",
             CreatedAt = DateTime.UtcNow
         },
         new Book
@@ -290,10 +290,10 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
             PublishedYear = 1945,
             Description = "A satirical allegorical novella reflecting events leading up to the Russian Revolution.",
             TotalCopies = 5,
-            AvailableCopies = 5,
+            AvailableCopies = 2,
             CategoryId = categories[0].CategoryId,
             PublisherId = publishers[0].PublisherId,
-            CoverImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71JNXa7TPUL.jpg",
+            CoverImageUrl = "https://i.pinimg.com/736x/15/ce/ec/15ceec007d0cb25fc13adbbf07bc89d4.jpg",
             CreatedAt = DateTime.UtcNow
         }
     };
