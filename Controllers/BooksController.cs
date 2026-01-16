@@ -232,8 +232,22 @@ namespace LibraryManagementSystem.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _bookService.DeleteBookAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _bookService.DeleteBookAsync(id);
+                TempData["SuccessMessage"] = "Book deleted successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the book.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
         }
 
         // AJAX: Check book availability

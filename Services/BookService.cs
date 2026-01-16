@@ -57,10 +57,33 @@ namespace LibraryManagementSystem.Services
 
         public async Task<bool> DeleteBookAsync(int id)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await _context.Books
+                .Include(b => b.Loans)
+                .Include(b => b.Reservations)
+                .Include(b => b.BookAuthors)
+                .FirstOrDefaultAsync(b => b.BookId == id);
+                
             if (book == null)
                 return false;
 
+            // Check if book has active loans or reservations
+            if (book.Loans.Any(l => l.Status == LoanStatus.Active))
+            {
+                throw new InvalidOperationException("Cannot delete book with active loans. Please wait for all loans to be returned.");
+            }
+
+            if (book.Reservations.Any(r => r.Status == ReservationStatus.Pending || r.Status == ReservationStatus.Fulfilled))
+            {
+                throw new InvalidOperationException("Cannot delete book with active reservations. Please cancel all reservations first.");
+            }
+
+            // Delete related records first
+            if (book.BookAuthors.Any())
+            {
+                _context.BookAuthors.RemoveRange(book.BookAuthors);
+            }
+
+            // Delete the book
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
             return true;
