@@ -48,6 +48,18 @@
     }
     else
     {
+        @if (Model.Any(r => r.Status == ReservationStatus.Fulfilled))
+        {
+            <div class="alert alert-success border-0 shadow-sm mb-4">
+                <h5><i class="bi bi-check-circle-fill"></i> Good News!</h5>
+                <p class="mb-2">
+                    <strong>Your reserved book is now available!</strong> Click "Borrow Now!" below to get it.
+                </p>
+                <small>
+                    <i class="bi bi-clock"></i> Remember: You have 7 days to borrow it before the reservation expires.
+                </small>
+            </div>
+        }
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -68,20 +80,49 @@
                                                 reservation.Status == ReservationStatus.Fulfilled ? "success" :
                                                 reservation.Status == ReservationStatus.Cancelled ? "secondary" : "danger";
 
-                                <tr>
+                                <tr class="@(reservation.Status == ReservationStatus.Fulfilled ? "table-success" : "")">
                                     <td>
                                         <strong>@reservation.Book.Title</strong><br>
                                         <small class="text-muted">ISBN: @reservation.Book.ISBN</small>
+                                        @if (reservation.Status == ReservationStatus.Fulfilled)
+                                        {
+                                            <br><span class="badge bg-success mt-1">
+                                                <i class="bi bi-check-circle-fill"></i> Available Now!
+                                            </span>
+                                        }
                                     </td>
                                     <td>@reservation.ReservationDate.ToString()</td>
-                                    <td>@reservation.ExpiryDate.ToString()
-                                    <td><span class="badge bg-@statusClass">@reservation.Status</span></td>
+                                    <td>
+                                        @if (reservation.ExpiryDate.HasValue)
+                                        {
+                                            @reservation.ExpiryDate.Value.ToString()
+                                            @if (reservation.Status == ReservationStatus.Fulfilled)
+                                            {
+                                                <br><small class="text-danger">
+                                                    <i class="bi bi-clock"></i> Pick up by this date!
+                                                </small>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-@statusClass">@reservation.Status</span>
+                                    </td>
                                     <td>
                                         @if (reservation.Status == ReservationStatus.Pending)
                                         {
-                                            <button class="btn btn-sm btn-danger cancel-reservation" data-reservation-id="@reservation.ReservationId">
+                                            <button class="btn btn-sm btn-warning cancel-reservation" data-reservation-id="@reservation.ReservationId">
                                                 <i class="bi bi-x-circle"></i> Cancel
                                             </button>
+                                        }
+                                        else if (reservation.Status == ReservationStatus.Fulfilled)
+                                        {
+                                            <a asp-controller="Books" asp-action="Details" asp-route-id="@reservation.BookId" class="btn btn-sm btn-success">
+                                                <i class="bi bi-book"></i> Borrow Now!
+                                            </a>
                                         }
                                         else
                                         {

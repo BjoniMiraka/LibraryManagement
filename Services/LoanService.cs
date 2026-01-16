@@ -110,6 +110,20 @@ namespace LibraryManagementSystem.Services
             }
 
             loan.Book.AvailableCopies++;
+            
+            // Check if there are pending reservations for this book
+            var pendingReservation = await _context.Reservations
+                .Where(r => r.BookId == loan.BookId && r.Status == ReservationStatus.Pending)
+                .OrderBy(r => r.ReservationDate) // First come, first served
+                .FirstOrDefaultAsync();
+            
+            if (pendingReservation != null)
+            {
+                // Fulfill the oldest reservation
+                pendingReservation.Status = ReservationStatus.Fulfilled;
+                pendingReservation.ExpiryDate = DateTime.UtcNow.AddDays(7); // 7 days to pick up
+            }
+            
             await _context.SaveChangesAsync();
             return true;
         }
