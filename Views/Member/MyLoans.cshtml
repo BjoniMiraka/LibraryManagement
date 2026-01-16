@@ -5,46 +5,27 @@
 }
 
 <div class="container mt-4">
-    <h1 class="mb-4">My Loans</h1>
-
-    <!-- Help Card -->
-    <div class="card mb-4 bg-light">
-        <div class="card-body">
-            <h5><i class="bi bi-info-circle"></i> What are Loans?</h5>
-            <p class="mb-2">
-                A <strong>loan</strong> means you've borrowed a book from the library. Each loan has:
-            </p>
-            <div class="row">
-                <div class="col-md-3">
-                    <strong><i class="bi bi-calendar-check"></i> Loan Date:</strong><br>
-                    <small>When you borrowed it</small>
-                </div>
-                <div class="col-md-3">
-                    <strong><i class="bi bi-calendar-x"></i> Due Date:</strong><br>
-                    <small>When to return (14 days)</small>
-                </div>
-                <div class="col-md-3">
-                    <strong><i class="bi bi-check-circle"></i> Return Date:</strong><br>
-                    <small>When you returned it</small>
-                </div>
-                <div class="col-md-3">
-                    <strong><i class="bi bi-cash"></i> Late Fee:</strong><br>
-                    <small>$1 per day if overdue</small>
-                </div>
-            </div>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>My Loans</h1>
+        <a asp-controller="Home" asp-action="Guide" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-question-circle"></i> Need Help?
+        </a>
     </div>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i> You don't have any loans yet.
-            <a asp-controller="Books" asp-action="Index" class="alert-link">Browse books</a> to get started!
+        <div class="card text-center" style="padding: 4rem 2rem; border: 2px dashed #d1d5db; background: #fafafa;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
+            <h3 style="font-weight: 700; margin-bottom: 1rem;">No loans yet</h3>
+            <p style="color: #6b7280; margin-bottom: 2rem;">Browse books and start reading</p>
+            <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-lg">
+                Browse Books
+            </a>
         </div>
     }
     else
     {
-        <div class="card">
+        <div class="card border-0 shadow">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped">

@@ -4,325 +4,153 @@
 
 <div class="container">
     <!-- Hero Section -->
-    <div class="text-center py-5">
-        <h1 class="display-3 fw-bold text-primary">
-            <i class="bi bi-book-fill"></i> Library Management System
-        </h1>
-        <p class="lead text-muted">Manage physical books in your library</p>
-        <div class="alert alert-info d-inline-block">
-            <i class="bi bi-info-circle-fill"></i>
-            <strong>Note:</strong> This system tracks <strong>physical books</strong>. You borrow real books from the library, not digital copies.
+    <div class="text-center" style="padding: 4rem 0 3rem 0;">
+        <div class="mb-4">
+            <span style="font-size: 4rem;">📚</span>
         </div>
+        <h1 style="font-size: 3rem; font-weight: 800; color: #5b21b6; margin-bottom: 1rem;">
+            Welcome to Our Library
+        </h1>
+        <p style="font-size: 1.3rem; color: #6b7280; max-width: 600px; margin: 0 auto 2rem auto;">
+            Discover your next favorite book. Borrow, read, and return - all managed in one place.
+        </p>
         
         @if (!User.Identity!.IsAuthenticated)
         {
             <div class="mt-4">
-                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">
-                    <i class="bi bi-person-plus"></i> Get Started
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-3" style="padding: 1rem 2.5rem;">
+                    Get Started Free
                 </a>
-                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg">
-                    <i class="bi bi-box-arrow-in-right"></i> Login
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg" style="padding: 1rem 2.5rem;">
+                    Sign In
+                </a>
+            </div>
+            <div class="mt-4">
+                <a asp-action="Guide" style="color: #6b7280; font-size: 0.95rem;">
+                    How does it work? →
                 </a>
             </div>
         }
         else
         {
             <div class="mt-4">
-                <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-lg me-2">
-                    <i class="bi bi-book"></i> Browse Books
+                <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-lg me-3" style="padding: 1rem 2.5rem;">
+                    Browse Books
                 </a>
-                <a asp-controller="Member" asp-action="Dashboard" class="btn btn-outline-primary btn-lg">
-                    <i class="bi bi-speedometer2"></i> My Dashboard
+                <a asp-controller="Member" asp-action="Dashboard" class="btn btn-outline-primary btn-lg" style="padding: 1rem 2.5rem;">
+                    My Dashboard
                 </a>
             </div>
         }
     </div>
 
-    <!-- How It Works Section -->
-    @if (!User.Identity!.IsAuthenticated)
-    {
-        <div class="row mt-5 mb-5">
-            <div class="col-12 text-center mb-4">
-                <h2 class="fw-bold">How It Works</h2>
-                <p class="text-muted">Simple steps to start borrowing books</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                        <h2 class="mb-0">1</h2>
-                    </div>
-                </div>
-                <h5>Register</h5>
-                <p class="text-muted">Create your free account in minutes</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                        <h2 class="mb-0">2</h2>
-                    </div>
-                </div>
-                <h5>Browse Books</h5>
-                <p class="text-muted">Search our extensive catalog</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <div class="rounded-circle bg-info text-white d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                        <h2 class="mb-0">3</h2>
-                    </div>
-                </div>
-                <h5>Borrow Books</h5>
-                <p class="text-muted">Get books for 14 days</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <div class="rounded-circle bg-warning text-white d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                        <h2 class="mb-0">4</h2>
-                    </div>
-                </div>
-                <h5>Return & Repeat</h5>
-                <p class="text-muted">Return and borrow more!</p>
-            </div>
-        </div>
-    }
-
-    <!-- Features Section -->
-    <div class="row mt-5">
-        <div class="col-12 text-center mb-4">
-            <h2 class="fw-bold">Key Features</h2>
-        </div>
-                <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center shadow-sm hover-card">
-                <div class="card-body">
-                    <i class="bi bi-book-half" style="font-size: 3rem; color: #0d6efd;"></i>
-                    <h3 class="card-title mt-3">📚 Borrow Physical Books</h3>
-                    <p class="card-text">Click "Borrow This Book" online, then <strong>pick up the physical book</strong> from the library. You have 14 days to read it at home.</p>
-                    <hr>
-                    <small class="text-muted">
-                        <strong>Loan Period:</strong> 14 days<br>
-                        <strong>Late Fee:</strong> $1 per day<br>
-                        <strong>Type:</strong> Physical books only
-                    </small>
-                </div>
+    <!-- Features -->
+    <div class="row" style="margin-top: 4rem; margin-bottom: 4rem;">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="padding: 2rem; text-align: center; border: 2px solid #f3f4f6;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📖</div>
+                <h4 style="margin-bottom: 1rem;">Easy Borrowing</h4>
+                <p style="color: #6b7280; line-height: 1.6;">
+                    Find books you love and borrow them with just a click. Keep them for 14 days.
+                </p>
             </div>
         </div>
         <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center shadow-sm hover-card">
-                <div class="card-body">
-                    <i class="bi bi-bookmark-fill" style="font-size: 3rem; color: #17a2b8;"></i>
-                    <h3 class="card-title mt-3">🔖 Reserve Books</h3>
-                    <p class="card-text">If a book is unavailable, click "Reserve This Book" to join the waiting list. You'll be notified when it's available!</p>
-                    <hr>
-                    <small class="text-muted">
-                        <strong>Pickup Window:</strong> 7 days<br>
-                        <strong>Queue:</strong> First come, first served
-                    </small>
-                </div>
+            <div class="card h-100" style="padding: 2rem; text-align: center; border: 2px solid #f3f4f6;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔖</div>
+                <h4 style="margin-bottom: 1rem;">Smart Reservations</h4>
+                <p style="color: #6b7280; line-height: 1.6;">
+                    Book unavailable? Reserve it and we'll let you know when it's ready.
+                </p>
             </div>
         </div>
         <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center shadow-sm hover-card">
-                <div class="card-body">
-                    <i class="bi bi-journal-check" style="font-size: 3rem; color: #28a745;"></i>
-                    <h3 class="card-title mt-3">📋 Track Everything</h3>
-                    <p class="card-text">View your active loans, due dates, reservations, and borrowing history all in one place - "My Dashboard".</p>
-                    <hr>
-                    <small class="text-muted">
-                        <strong>Dashboard:</strong> Real-time stats<br>
-                        <strong>Alerts:</strong> Overdue warnings
-                    </small>
-                </div>
+            <div class="card h-100" style="padding: 2rem; text-align: center; border: 2px solid #f3f4f6;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                <h4 style="margin-bottom: 1rem;">Track Everything</h4>
+                <p style="color: #6b7280; line-height: 1.6;">
+                    Never miss a due date. Track all your loans and reservations in one place.
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Understanding the System -->
-    <div class="row mt-5 mb-4">
-        <div class="col-12">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h3 class="text-center mb-4"><i class="bi bi-question-circle"></i> Understanding the System</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="text-primary"><i class="bi bi-book"></i> What are Loans?</h5>
-                            <p>A <strong>loan</strong> is when you borrow a <strong>physical book</strong> from the library. You get to keep it for <strong>14 days</strong>. After that, you need to return it to the library. If you return it late, there's a small fee of <strong>$1 per day</strong>.</p>
-                            <p><strong>How to borrow:</strong></p>
-                            <ol>
-                                <li>Find a book you like online</li>
-                                <li>Click on it to see details</li>
-                                <li>If it says "Available", click "Borrow This Book"</li>
-                                <li><strong>Go to the library and pick up the physical book</strong></li>
-                                <li>Read it at home for 14 days</li>
-                                <li><strong>Return the physical book to the library</strong></li>
-                            </ol>
-                            <p class="mb-0"><strong>View your loans:</strong> Go to "My Account" → "My Loans"</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="text-info"><i class="bi bi-bookmark"></i> What are Reservations?</h5>
-                            <p>A <strong>reservation</strong> is like joining a waiting list. If all copies of a book are borrowed, you can reserve it. When someone returns it, you'll be the next person to get it!</p>
-                            <p><strong>How to reserve:</strong></p>
-                            <ol>
-                                <li>Find a book that's "Not Available"</li>
-                                <li>Click "Reserve This Book"</li>
-                                <li>Wait for notification when it's available</li>
-                                <li>Pick it up within 7 days</li>
-                            </ol>
-                            <p class="mb-0"><strong>Manage reservations:</strong> Go to "My Account" → "My Reservations"</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Access (for authenticated users) -->
+    <!-- Quick Access for logged in users -->
     @if (User.Identity!.IsAuthenticated)
     {
-        <div class="row mt-5">
-            <div class="col-12">
-                <h2 class="text-center mb-4">Quick Access</h2>
-            </div>
-            <div class="col-md-3">
-                <a asp-controller="Books" asp-action="Index" class="text-decoration-none">
-                    <div class="card text-white bg-primary mb-3 hover-card">
-                        <div class="card-body text-center">
-                            <i class="bi bi-book" style="font-size: 2rem;"></i>
-                            <h5 class="card-title mt-2">Browse Books</h5>
-                            <p class="small mb-0">Search & find books</p>
-                        </div>
+        <div style="margin-top: 5rem; margin-bottom: 4rem;">
+            <h2 style="text-align: center; margin-bottom: 2.5rem; font-weight: 700;">Quick Access</h2>
+            
+            <div class="row">
+                @if (User.IsInRole("Member") || User.IsInRole("Librarian") || User.IsInRole("Admin"))
+                {
+                    <div class="col-md-3 mb-3">
+                        <a asp-controller="Books" asp-action="Index">
+                            <div class="card quick-access-card" style="background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%); color: white; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📚</div>
+                                <h5 style="color: white; margin: 0;">Browse Books</h5>
+                            </div>
+                        </a>
                     </div>
-                </a>
+                    <div class="col-md-3 mb-3">
+                        <a asp-controller="Member" asp-action="MyLoans">
+                            <div class="card quick-access-card" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📋</div>
+                                <h5 style="color: white; margin: 0;">My Loans</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a asp-controller="Member" asp-action="MyReservations">
+                            <div class="card quick-access-card" style="background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); color: white; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔖</div>
+                                <h5 style="color: white; margin: 0;">Reservations</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a asp-controller="Member" asp-action="Profile">
+                            <div class="card quick-access-card" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color: white; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👤</div>
+                                <h5 style="color: white; margin: 0;">My Profile</h5>
+                            </div>
+                        </a>
+                    </div>
+                }
+                
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="col-md-4 mb-3">
+                        <a asp-controller="Admin" asp-action="Dashboard">
+                            <div class="card quick-access-card" style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: white; padding: 2rem; text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⚙️</div>
+                                <h5 style="color: white; margin: 0;">Admin Panel</h5>
+                            </div>
+                        </a>
+                    </div>
+                }
             </div>
-            @if (User.IsInRole("Member") || User.IsInRole("Librarian") || User.IsInRole("Admin"))
-            {
-                <div class="col-md-3">
-                    <a asp-controller="Member" asp-action="Dashboard" class="text-decoration-none">
-                        <div class="card text-white bg-secondary mb-3 hover-card">
-                            <div class="card-body text-center">
-                                <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
-                                <h5 class="card-title mt-2">My Dashboard</h5>
-                                <p class="small mb-0">View your stats</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a asp-controller="Member" asp-action="MyLoans" class="text-decoration-none">
-                        <div class="card text-white bg-success mb-3 hover-card">
-                            <div class="card-body text-center">
-                                <i class="bi bi-journal-check" style="font-size: 2rem;"></i>
-                                <h5 class="card-title mt-2">My Loans</h5>
-                                <p class="small mb-0">Track borrowed books</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a asp-controller="Member" asp-action="MyReservations" class="text-decoration-none">
-                        <div class="card text-white bg-info mb-3 hover-card">
-                            <div class="card-body text-center">
-                                <i class="bi bi-bookmark" style="font-size: 2rem;"></i>
-                                <h5 class="card-title mt-2">My Reservations</h5>
-                                <p class="small mb-0">Manage waiting list</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
-            @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
-            {
-                <div class="col-md-3">
-                    <a asp-controller="Books" asp-action="Create" class="text-decoration-none">
-                        <div class="card text-white bg-success mb-3 hover-card">
-                            <div class="card-body text-center">
-                                <i class="bi bi-plus-circle" style="font-size: 2rem;"></i>
-                                <h5 class="card-title mt-2">Add Book</h5>
-                                <p class="small mb-0">Create new book</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
-            @if (User.IsInRole("Admin"))
-            {
-                <div class="col-md-3">
-                    <a asp-controller="Admin" asp-action="Dashboard" class="text-decoration-none">
-                        <div class="card text-white bg-warning mb-3 hover-card">
-                            <div class="card-body text-center">
-                                <i class="bi bi-speedometer2" style="font-size: 2rem;"></i>
-                                <h5 class="card-title mt-2">Admin Dashboard</h5>
-                                <p class="small mb-0">System overview</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a asp-controller="Admin" asp-action="Loans" class="text-decoration-none">
-                        <div class="card text-white bg-danger mb-3 hover-card">
-                            <div class="card-body text-center">
-                                <i class="bi bi-journal-text" style="font-size: 2rem;"></i>
-                                <h5 class="card-title mt-2">All Loans</h5>
-                                <p class="small mb-0">Manage all loans</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a asp-controller="Admin" asp-action="Categories" class="text-decoration-none">
-                        <div class="card text-white bg-info mb-3 hover-card">
-                            <div class="card-body text-center">
-                                <i class="bi bi-tags" style="font-size: 2rem;"></i>
-                                <h5 class="card-title mt-2">Categories</h5>
-                                <p class="small mb-0">Manage categories</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
         </div>
     }
 
-    <!-- Technology Stack -->
-    <div class="row mt-5 mb-5">
-        <div class="col-12">
-            <h2 class="text-center mb-4">Built With Modern Technology</h2>
-        </div>
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-md-3">
-                            <i class="bi bi-code-square" style="font-size: 2rem; color: #512bd4;"></i>
-                            <h5 class="mt-2">ASP.NET Core 9</h5>
-                            <p class="text-muted">MVC Framework</p>
-                        </div>
-                        <div class="col-md-3">
-                            <i class="bi bi-database" style="font-size: 2rem; color: #0d6efd;"></i>
-                            <h5 class="mt-2">Entity Framework</h5>
-                            <p class="text-muted">ORM & Database</p>
-                        </div>
-                        <div class="col-md-3">
-                            <i class="bi bi-palette" style="font-size: 2rem; color: #6610f2;"></i>
-                            <h5 class="mt-2">Bootstrap 5</h5>
-                            <p class="text-muted">Responsive UI</p>
-                        </div>
-                        <div class="col-md-3">
-                            <i class="bi bi-lightning" style="font-size: 2rem; color: #ffc107;"></i>
-                            <h5 class="mt-2">jQuery AJAX</h5>
-                            <p class="text-muted">Dynamic Updates</p>
-                        </div>
-                    </div>
+    <!-- Stats Section (if not logged in) -->
+    @if (!User.Identity!.IsAuthenticated)
+    {
+        <div style="background: white; border-radius: 20px; padding: 3rem; margin: 4rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            <div class="row text-center">
+                <div class="col-md-4 mb-3">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #5b21b6;">1000+</div>
+                    <div style="color: #6b7280; font-weight: 500;">Books Available</div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #059669;">500+</div>
+                    <div style="color: #6b7280; font-weight: 500;">Active Members</div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #0891b2;">14 Days</div>
+                    <div style="color: #6b7280; font-weight: 500;">Loan Period</div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 </div>
-
-<style>
-    .hover-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .hover-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-    }
-</style>

@@ -6,20 +6,23 @@
     var userBorrowedBookIds = ViewBag.UserBorrowedBookIds as List<int> ?? new List<int>();
 }
 
-<div class="container mt-4">
+<div class="container" style="padding: 2rem 0;">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Books Library</h1>
+        <div>
+            <h1 style="font-weight: 700; margin-bottom: 0.5rem;">Explore Books</h1>
+            <p style="color: #6b7280; margin: 0;">Find your next great read</p>
+        </div>
         @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
         {
             <a asp-action="Create" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Add New Book
+                <i class="bi bi-plus-circle"></i> Add Book
             </a>
         }
     </div>
 
     <!-- Search and Filter Section -->
-    <div class="card mb-4 border-0 shadow">
-        <div class="card-body">
+    <div class="card mb-4" style="border: 2px solid #f3f4f6;">
+        <div class="card-body" style="padding: 1.5rem;">
             <form asp-action="Index" method="get" class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label">Search</label>
@@ -70,21 +73,25 @@
     </div>
 
     <!-- Results Info -->
-    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string))
+    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string) || ViewBag.CategoryId != null)
     {
-        <div class="alert alert-info border-0 shadow-sm mb-3">
-            <i class="bi bi-search"></i> Searching for: <strong>"@ViewBag.SearchTerm"</strong>
-        </div>
-    }
-    @if (ViewBag.CategoryId != null && categories != null)
-    {
-        var selectedCategory = categories.FirstOrDefault(c => c.CategoryId == ViewBag.CategoryId);
-        if (selectedCategory != null)
-        {
-            <div class="alert alert-info border-0 shadow-sm mb-3">
-                <i class="bi bi-tag"></i> Category: <strong>@selectedCategory.Name</strong>
+        <div style="background: #f9fafb; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string))
+                {
+                    <span style="color: #6b7280;">Searching for: <strong style="color: #1f2937;">"@ViewBag.SearchTerm"</strong></span>
+                }
+                @if (ViewBag.CategoryId != null && categories != null)
+                {
+                    var selectedCategory = categories.FirstOrDefault(c => c.CategoryId == ViewBag.CategoryId);
+                    if (selectedCategory != null)
+                    {
+                        <span style="color: #6b7280;">Category: <strong style="color: #1f2937;">@selectedCategory.Name</strong></span>
+                    }
+                }
             </div>
-        }
+            <a asp-action="Index" style="color: #6b7280; font-size: 0.9rem;">Clear ✕</a>
+        </div>
     }
 
     <!-- Books Grid -->
@@ -93,33 +100,31 @@
         <!-- Empty State -->
         <div class="row">
             <div class="col-12">
-                <div class="card text-center py-5 border-0 shadow">
-                    <div class="card-body">
-                        <i class="bi bi-book" style="font-size: 5rem; color: #d1d5db;"></i>
-                        <h3 class="mt-4">No Books Found</h3>
-                        <p class="text-muted">
-                            @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string) || ViewBag.CategoryId != null)
-                            {
-                                <span>No books match your search criteria. Try adjusting your filters.</span>
-                            }
-                            else
-                            {
-                                <span>The library doesn't have any books yet.</span>
-                            }
-                        </p>
-                        @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                <div class="card text-center" style="padding: 4rem 2rem; border: 2px dashed #d1d5db; background: #fafafa;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📭</div>
+                    <h3 style="font-weight: 700; margin-bottom: 1rem;">Nothing here yet</h3>
+                    <p style="color: #6b7280; margin-bottom: 2rem;">
+                        @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string) || ViewBag.CategoryId != null)
                         {
-                            <a asp-action="Create" class="btn btn-primary btn-lg mt-3">
-                                <i class="bi bi-plus-circle"></i> Add Your First Book
-                            </a>
+                            <span>Try a different search or filter</span>
                         }
                         else
                         {
-                            <a asp-action="Index" class="btn btn-secondary mt-3">
-                                <i class="bi bi-arrow-clockwise"></i> Clear Filters
-                            </a>
+                            <span>No books in the library yet</span>
                         }
-                    </div>
+                    </p>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                    {
+                        <a asp-action="Create" class="btn btn-primary btn-lg">
+                            Add Your First Book
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="Index" class="btn btn-primary">
+                            Clear Filters
+                        </a>
+                    }
                 </div>
             </div>
         </div>

@@ -1,139 +1,79 @@
 @{
-    ViewData["Title"] = "My Dashboard";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">My Dashboard</h1>
+<div class="container" style="padding: 2rem 0;">
+    <div class="mb-4">
+        <h1 style="font-weight: 700; margin-bottom: 0.5rem;">Hey there! 👋</h1>
+        <p style="color: #6b7280; font-size: 1.1rem;">Here's what's happening with your books</p>
+    </div>
 
-    <!-- Statistics Cards -->
+    <!-- Stats -->
     <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Active Loans</h5>
-                    <h2>@ViewBag.ActiveLoans</h2>
-                    <a asp-action="MyLoans" class="btn btn-light btn-sm mt-2">View All</a>
-                </div>
+        <div class="col-md-4 mb-3">
+            <div class="card" style="background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%); color: white; padding: 2rem; border-radius: 16px;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📚</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Active Loans</div>
+                <div style="font-size: 2.5rem; font-weight: 800;">@ViewBag.ActiveLoans</div>
+                <a asp-action="MyLoans" style="color: white; font-size: 0.9rem; margin-top: 1rem; display: inline-block;">
+                    View all →
+                </a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Overdue Books</h5>
-                    <h2>@ViewBag.OverdueLoans</h2>
-                    @if (ViewBag.OverdueLoans > 0)
-                    {
-                        <small>Please return these books as soon as possible!</small>
-                    }
-                </div>
+        <div class="col-md-4 mb-3">
+            <div class="card" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: 2rem; border-radius: 16px;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚠️</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Overdue</div>
+                <div style="font-size: 2.5rem; font-weight: 800;">@ViewBag.OverdueLoans</div>
+                @if (ViewBag.OverdueLoans > 0)
+                {
+                    <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">Return these soon!</div>
+                }
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Active Reservations</h5>
-                    <h2>@ViewBag.ActiveReservations</h2>
-                    <a asp-action="MyReservations" class="btn btn-light btn-sm mt-2">View All</a>
-                </div>
+        <div class="col-md-4 mb-3">
+            <div class="card" style="background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); color: white; padding: 2rem; border-radius: 16px;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔖</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Reservations</div>
+                <div style="font-size: 2.5rem; font-weight: 800;">@ViewBag.ActiveReservations</div>
+                <a asp-action="MyReservations" style="color: white; font-size: 0.9rem; margin-top: 1rem; display: inline-block;">
+                    View all →
+                </a>
             </div>
         </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4 class="mb-0">Quick Actions</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3">
-                    <a asp-controller="Books" asp-action="Index" class="btn btn-outline-primary w-100 mb-2">
-                        <i class="bi bi-book"></i> Browse Books
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a asp-action="MyLoans" class="btn btn-outline-success w-100 mb-2">
-                        <i class="bi bi-journal-check"></i> My Loans
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a asp-action="MyReservations" class="btn btn-outline-info w-100 mb-2">
-                        <i class="bi bi-bookmark"></i> My Reservations
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a asp-action="Profile" class="btn btn-outline-secondary w-100 mb-2">
-                        <i class="bi bi-person"></i> My Profile
-                    </a>
-                </div>
+    <div class="card" style="padding: 2rem; border: 2px solid #f3f4f6;">
+        <h4 style="margin-bottom: 1.5rem; font-weight: 700;">Quick Actions</h4>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <a asp-controller="Books" asp-action="Index" class="btn btn-outline-primary w-100" style="padding: 1rem;">
+                    <i class="bi bi-book"></i> Browse Books
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a asp-action="MyLoans" class="btn btn-outline-primary w-100" style="padding: 1rem;">
+                    <i class="bi bi-journal-check"></i> My Loans
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a asp-action="MyReservations" class="btn btn-outline-primary w-100" style="padding: 1rem;">
+                    <i class="bi bi-bookmark"></i> Reservations
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a asp-action="Profile" class="btn btn-outline-primary w-100" style="padding: 1rem;">
+                    <i class="bi bi-person"></i> Profile
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Help Section -->
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-question-circle"></i> How to Borrow Books</h5>
-                </div>
-                <div class="card-body">
-                    <ol class="mb-0">
-                        <li><strong>Browse Books:</strong> Click "Browse Books" above</li>
-                        <li><strong>Find a Book:</strong> Search or filter by category</li>
-                        <li><strong>Check Availability:</strong> Look for "Available" badge</li>
-                        <li><strong>Borrow:</strong> Click "Borrow This Book" button</li>
-                        <li><strong>Track:</strong> View your loan in "My Loans"</li>
-                    </ol>
-                    <hr>
-                    <p class="mb-0"><small class="text-muted">
-                        <i class="bi bi-clock"></i> Loan period: <strong>14 days</strong><br>
-                        <i class="bi bi-exclamation-triangle"></i> Late fee: <strong>$1 per day</strong>
-                    </small></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="bi bi-bookmark"></i> How to Reserve Books</h5>
-                </div>
-                <div class="card-body">
-                    <ol class="mb-0">
-                        <li><strong>Find Unavailable Book:</strong> All copies are loaned out</li>
-                        <li><strong>Reserve:</strong> Click "Reserve This Book" button</li>
-                        <li><strong>Wait:</strong> You'll be notified when available</li>
-                        <li><strong>Pick Up:</strong> You have 7 days to borrow it</li>
-                        <li><strong>Manage:</strong> Cancel anytime in "My Reservations"</li>
-                    </ol>
-                    <hr>
-                    <p class="mb-0"><small class="text-muted">
-                        <i class="bi bi-people"></i> Queue: <strong>First come, first served</strong><br>
-                        <i class="bi bi-calendar"></i> Pickup window: <strong>7 days</strong>
-                    </small></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Welcome Message -->
-    <div class="card">
-        <div class="card-body">
-            <h5><i class="bi bi-info-circle"></i> Quick Tips</h5>
-            <div class="row">
-                <div class="col-md-4">
-                    <h6 class="text-primary">📚 My Loans</h6>
-                    <p class="small">See all books you've borrowed, when they're due, and your borrowing history.</p>
-                </div>
-                <div class="col-md-4">
-                    <h6 class="text-info">🔖 My Reservations</h6>
-                    <p class="small">Track books you're waiting for. Cancel reservations you no longer need.</p>
-                </div>
-                <div class="col-md-4">
-                    <h6 class="text-success">👤 My Profile</h6>
-                    <p class="small">View and edit your personal information, address, and phone number.</p>
-                </div>
-            </div>
-        </div>
+    <!-- Help Link -->
+    <div class="text-center" style="margin-top: 3rem;">
+        <a asp-controller="Home" asp-action="Guide" style="color: #6b7280;">
+            Need help? Check out our guide →
+        </a>
     </div>
 </div>

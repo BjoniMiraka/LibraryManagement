@@ -1,12 +1,20 @@
 @model LibraryManagementSystem.Models.Book
 
 @{
-    ViewData["Title"] = "Book Details";
+    ViewData["Title"] = Model.Title;
     var userHasActiveLoan = (bool)(ViewBag.UserHasActiveLoan ?? false);
     var userHasReservation = (bool)(ViewBag.UserHasReservation ?? false);
 }
 
 <div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Books</a></li>
+            <li class="breadcrumb-item active">@Model.Title</li>
+        </ol>
+    </nav>
+
     <div class="row">
         <!-- Book Cover Section -->
         <div class="col-md-4">
@@ -165,26 +173,18 @@
                             else
                             {
                                 <!-- Can borrow or reserve -->
-                                @if (Model.AvailableCopies > 0)
-                                {
-                                    <button id="borrowBook" class="btn btn-success btn-lg shadow" data-book-id="@Model.BookId">
-                                        <i class="bi bi-book"></i> Borrow This Book
-                                    </button>
-                                    <small class="text-muted text-center">
-                                        <i class="bi bi-info-circle"></i> 
-                                        Pick up from library • 14 days loan • $1/day late fee
-                                    </small>
-                                }
-                                else
-                                {
-                                    <button id="reserveBook" class="btn btn-info btn-lg shadow" data-book-id="@Model.BookId">
-                                        <i class="bi bi-bookmark"></i> Reserve This Book
-                                    </button>
-                                    <small class="text-muted text-center">
-                                        <i class="bi bi-info-circle"></i> 
-                                        Join waiting list • 7 days to pick up when available
-                                    </small>
-                                }
+                        @if (Model.AvailableCopies > 0)
+                        {
+                            <button id="borrowBook" class="btn btn-success btn-lg shadow" data-book-id="@Model.BookId">
+                                <i class="bi bi-book"></i> Borrow This Book
+                            </button>
+                        }
+                        else
+                        {
+                            <button id="reserveBook" class="btn btn-info btn-lg shadow" data-book-id="@Model.BookId">
+                                <i class="bi bi-bookmark"></i> Reserve This Book
+                            </button>
+                        }
                             }
                         }
                         else if (!User.Identity!.IsAuthenticated)
@@ -192,10 +192,6 @@
                             <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg shadow">
                                 <i class="bi bi-box-arrow-in-right"></i> Login to Borrow
                             </a>
-                            <small class="text-muted text-center">
-                                <i class="bi bi-info-circle"></i> 
-                                You need an account to borrow books
-                            </small>
                         }
                         
                         <!-- Admin Actions -->
@@ -215,7 +211,7 @@
                         }
                         
                         <a asp-action="Index" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left"></i> Back to Library
+                            <i class="bi bi-arrow-left"></i> Back to Books
                         </a>
                     </div>
                 </div>
@@ -232,7 +228,7 @@
                 const bookId = $(this).data('book-id');
                 const button = $(this);
 
-                if (confirm('Borrow this book?\n\n✓ Pick up from library\n✓ 14 days to read\n✓ $1/day late fee\n\nContinue?')) {
+                if (confirm('Borrow this book for 14 days?')) {
                     $.ajax({
                         url: '@Url.Action("BorrowBook", "Member")',
                         type: 'POST',
@@ -242,7 +238,7 @@
                         },
                         success: function (response) {
                             if (response.success) {
-                                showAlert('✓ Success! Book borrowed until ' + response.dueDate + '\n\nGo to the library to pick it up!', 'success');
+                                showAlert('Book borrowed successfully! Due date: ' + response.dueDate, 'success');
                                 setTimeout(function () {
                                     location.reload();
                                 }, 2000);
@@ -264,7 +260,7 @@
                 const bookId = $(this).data('book-id');
                 const button = $(this);
 
-                if (confirm('Reserve this book?\n\n✓ Join waiting list\n✓ Get notified when available\n✓ 7 days to pick up\n\nContinue?')) {
+                if (confirm('Join the waiting list for this book?')) {
                     $.ajax({
                         url: '@Url.Action("ReserveBook", "Member")',
                         type: 'POST',
@@ -274,7 +270,7 @@
                         },
                         success: function (response) {
                             if (response.success) {
-                                showAlert('✓ Reserved! You\'re in the waiting list.\n\nWe\'ll notify you when it\'s available.', 'success');
+                                showAlert('Reservation successful! We\'ll notify you when available.', 'success');
                                 setTimeout(function () {
                                     location.reload();
                                 }, 2000);

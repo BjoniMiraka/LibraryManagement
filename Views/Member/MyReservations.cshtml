@@ -5,62 +5,32 @@
 }
 
 <div class="container mt-4">
-    <h1 class="mb-4">My Reservations</h1>
-
-    <!-- Help Card -->
-    <div class="card mb-4 bg-light">
-        <div class="card-body">
-            <h5><i class="bi bi-bookmark"></i> What are Reservations?</h5>
-            <p class="mb-2">
-                A <strong>reservation</strong> is like joining a waiting list for a book. When all copies are borrowed, you can reserve it and be next in line!
-            </p>
-            <div class="row">
-                <div class="col-md-3">
-                    <strong><i class="bi bi-hourglass-split"></i> Pending:</strong><br>
-                    <small>Waiting for book</small>
-                </div>
-                <div class="col-md-3">
-                    <strong><i class="bi bi-check-circle"></i> Fulfilled:</strong><br>
-                    <small>Book is ready!</small>
-                </div>
-                <div class="col-md-3">
-                    <strong><i class="bi bi-x-circle"></i> Cancelled:</strong><br>
-                    <small>You cancelled it</small>
-                </div>
-                <div class="col-md-3">
-                    <strong><i class="bi bi-clock-history"></i> Expired:</strong><br>
-                    <small>Pickup time passed</small>
-                </div>
-            </div>
-            <hr>
-            <p class="mb-0"><small>
-                <i class="bi bi-info-circle"></i> You have <strong>7 days</strong> to pick up a book once it's available. After that, the reservation expires and the next person in line gets it.
-            </small></p>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>My Reservations</h1>
+        <a asp-controller="Home" asp-action="Guide" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-question-circle"></i> Need Help?
+        </a>
     </div>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i> You don't have any reservations.
-            When you find a book that's unavailable, click "Reserve This Book" to join the waiting list!
+        <div class="card text-center" style="padding: 4rem 2rem; border: 2px dashed #d1d5db; background: #fafafa;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🔖</div>
+            <h3 style="font-weight: 700; margin-bottom: 1rem;">No reservations</h3>
+            <p style="color: #6b7280;">Reserve books when all copies are borrowed</p>
         </div>
     }
     else
     {
         @if (Model.Any(r => r.Status == ReservationStatus.Fulfilled))
         {
-            <div class="alert alert-success border-0 shadow-sm mb-4">
-                <h5><i class="bi bi-check-circle-fill"></i> Good News!</h5>
-                <p class="mb-2">
-                    <strong>Your reserved book is now available!</strong> Click "Borrow Now!" below to get it.
-                </p>
-                <small>
-                    <i class="bi bi-clock"></i> Remember: You have 7 days to borrow it before the reservation expires.
-                </small>
+            <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
+                <h4 style="color: white; font-weight: 700; margin-bottom: 0.5rem;">Good news!</h4>
+                <p style="margin: 0; opacity: 0.95;">Your reserved book is ready. Click "Borrow Now!" below to get it.</p>
             </div>
         }
-        <div class="card">
+        <div class="card border-0 shadow">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped">

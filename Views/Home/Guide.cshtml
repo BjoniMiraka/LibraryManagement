@@ -1,0 +1,107 @@
+@{
+    ViewData["Title"] = "How It Works";
+}
+
+<div class="container" style="padding: 3rem 0;">
+    <div class="text-center mb-5">
+        <span style="font-size: 3.5rem;">💡</span>
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-top: 1rem;">How It Works</h1>
+        <p style="color: #6b7280; font-size: 1.1rem;">Everything you need to know</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Borrowing -->
+            <div class="card mb-4" style="border: 2px solid #f3f4f6; padding: 2rem;">
+                <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                    <span style="font-size: 2.5rem; margin-right: 1rem;">📖</span>
+                    <h3 style="margin: 0; font-weight: 700;">Borrowing Books</h3>
+                </div>
+                
+                <div style="background: #f9fafb; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: start; margin-bottom: 1rem;">
+                        <span style="background: #5b21b6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 1rem; flex-shrink: 0;">1</span>
+                        <div>
+                            <strong>Find a book</strong>
+                            <p style="color: #6b7280; margin: 0.25rem 0 0 0;">Browse or search for books you want to read</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: start; margin-bottom: 1rem;">
+                        <span style="background: #5b21b6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 1rem; flex-shrink: 0;">2</span>
+                        <div>
+                            <strong>Click "Borrow This Book"</strong>
+                            <p style="color: #6b7280; margin: 0.25rem 0 0 0;">If available, just click the button</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: start; margin-bottom: 1rem;">
+                        <span style="background: #5b21b6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 1rem; flex-shrink: 0;">3</span>
+                        <div>
+                            <strong>Pick it up from the library</strong>
+                            <p style="color: #6b7280; margin: 0.25rem 0 0 0;">Visit the library to get your book</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: start;">
+                        <span style="background: #5b21b6; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 1rem; flex-shrink: 0;">4</span>
+                        <div>
+                            <strong>Return within 14 days</strong>
+                            <p style="color: #6b7280; margin: 0.25rem 0 0 0;">Bring it back to avoid late fees</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #fef3c7; padding: 1rem; border-radius: 10px; border-left: 4px solid #d97706;">
+                    <strong>Late Fee:</strong> $1 per day after due date
+                </div>
+            </div>
+
+            <!-- Reservations -->
+            <div class="card mb-4" style="border: 2px solid #f3f4f6; padding: 2rem;">
+                <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                    <span style="font-size: 2.5rem; margin-right: 1rem;">🔖</span>
+                    <h3 style="margin: 0; font-weight: 700;">Reservations</h3>
+                </div>
+                
+                <p style="color: #6b7280; margin-bottom: 1.5rem;">
+                    All copies borrowed? No problem. Reserve it and you'll be first in line when someone returns it.
+                </p>
+                
+                <div style="background: #dbeafe; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                    <strong>When available:</strong> You have 7 days to borrow it
+                </div>
+                
+                <div style="background: #d1fae5; padding: 1rem; border-radius: 10px;">
+                    <strong>Queue system:</strong> First come, first served
+                </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="card" style="border: 2px solid #f3f4f6; padding: 2rem;">
+                <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                    <span style="font-size: 2.5rem; margin-right: 1rem;">💡</span>
+                    <h3 style="margin: 0; font-weight: 700;">Quick Tips</h3>
+                </div>
+                
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6;">
+                        <strong>Search:</strong> Use the search bar to find books quickly
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6;">
+                        <strong>Filter:</strong> Browse by category to discover new genres
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6;">
+                        <strong>Dashboard:</strong> Check your loans and due dates regularly
+                    </li>
+                    <li style="padding: 0.75rem 0;">
+                        <strong>Reserve Early:</strong> Popular books get reserved fast
+                    </li>
+                </ul>
+            </div>
+
+            <div class="text-center" style="margin-top: 3rem;">
+                <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-lg" style="padding: 1rem 3rem;">
+                    Start Browsing
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
