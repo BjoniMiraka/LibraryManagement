@@ -30,6 +30,20 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white" asp-controller="Books" asp-action="Index">Books</a>
                             </li>
+                            @if (User.IsInRole("Member") || User.IsInRole("Librarian") || User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-white" href="#" id="memberDropdown" role="button" data-bs-toggle="dropdown">
+                                        My Account
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="Member" asp-action="Dashboard">Dashboard</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Member" asp-action="MyLoans">My Loans</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Member" asp-action="MyReservations">My Reservations</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Member" asp-action="Profile">My Profile</a></li>
+                                    </ul>
+                                </li>
+                            }
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item dropdown">

@@ -1,0 +1,87 @@
+@model IEnumerable<LibraryManagementSystem.Models.Loan>
+
+@{
+    ViewData["Title"] = "My Loans";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">My Loans</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> You don't have any loans yet.
+            <a asp-controller="Books" asp-action="Index" class="alert-link">Browse books</a> to get started!
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Loan Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                                <th>Late Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var loan in Model)
+                            {
+                                var statusClass = loan.Status == LoanStatus.Active ? "success" :
+                                                loan.Status == LoanStatus.Returned ? "secondary" :
+                                                loan.IsOverdue ? "danger" : "warning";
+
+                                <tr>
+                                    <td>
+                                        <strong>@loan.Book.Title</strong><br>
+                                        <small class="text-muted">ISBN: @loan.Book.ISBN</small>
+                                    </td>
+                                    <td>@loan.LoanDate.ToString()</td>
+                                    <td>
+                                        @loan.DueDate.ToString()
+                                        @if (loan.IsOverdue && loan.Status == LoanStatus.Active)
+                                        {
+                                            <br><span class="badge bg-danger">OVERDUE</span>
+                                        }
+                                    </td>
+                                    <td>@(loan.ReturnDate?.ToString() ?? "-")</td>
+                                    <td><span class="badge bg-@statusClass">@loan.Status</span></td>
+                                    <td>
+                                        @if (loan.LateFee > 0)
+                                        {
+                                            <span class="text-danger">$@loan.LateFee</span>
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Any(l => l.IsOverdue && l.Status == LoanStatus.Active))
+        {
+            <div class="alert alert-warning mt-3">
+                <i class="bi bi-exclamation-triangle"></i>
+                <strong>Reminder:</strong> You have overdue books. Please return them as soon as possible to avoid additional late fees ($1 per day).
+            </div>
+        }
+    }
+
+    <div class="mt-3">
+        <a asp-action="Dashboard" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>

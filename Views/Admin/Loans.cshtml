@@ -1,0 +1,155 @@
+@model IEnumerable<LibraryManagementSystem.Models.Loan>
+
+@{
+    ViewData["Title"] = "Manage Loans";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Manage Loans</h1>
+
+    <!-- Filter Options -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Filter by Status:</label>
+                    <select id="statusFilter" class="form-select">
+                        <option value="">All Loans</option>
+                        <option value="Active">Active</option>
+                        <option value="Returned">Returned</option>
+                        <option value="Overdue">Overdue</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loans Table -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-0">All Loans</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover" id="loansTable">
+                    <thead>
+                        <tr>
+                            <th>Loan ID</th>
+                            <th>Book</th>
+                            <th>User</th>
+                            <th>Loan Date</th>
+                            <th>Due Date</th>
+                            <th>Return Date</th>
+                            <th>Status</th>
+                            <th>Late Fee</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var loan in Model)
+                        {
+                            var statusClass = loan.Status == LoanStatus.Active ? "success" : 
+                                            loan.Status == LoanStatus.Returned ? "secondary" : 
+                                            loan.IsOverdue ? "danger" : "warning";
+                            
+                            <tr data-status="@loan.Status">
+                                <td>@loan.LoanId</td>
+                                <td>@loan.Book.Title</td>
+                                <td>
+                                    @loan.User.FirstName @loan.User.LastName<br>
+                                    <small class="text-muted">@loan.User.Email</small>
+                                </td>
+                                <td>@loan.LoanDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @loan.DueDate.ToString("yyyy-MM-dd")
+                                    @if (loan.IsOverdue && loan.Status == LoanStatus.Active)
+                                    {
+                                        <br><span class="badge bg-danger">OVERDUE</span>
+                                    }
+                                </td>
+                                <td>@(loan.ReturnDate?.ToString("yyyy-MM-dd") ?? "Not returned")</td>
+                                <td><span class="badge bg-@statusClass">@loan.Status</span></td>
+                                <td>@(loan.LateFee > 0 ? $"${loan.LateFee:F2}" : "-")</td>
+                                <td>
+                                    @if (loan.Status == LoanStatus.Active)
+                                    {
+                                        <button class="btn btn-sm btn-success return-book" data-loan-id="@loan.LoanId">
+                                            <i class="bi bi-check-circle"></i> Return
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Filter by status
+            $('#statusFilter').change(function () {
+                const status = $(this).val();
+                
+                if (status === '') {
+                    $('#loansTable tbody tr').show();
+                } else {
+                    $('#loansTable tbody tr').hide();
+                    $('#loansTable tbody tr[data-status="' + status + '"]').show();
+                }
+            });
+
+            // Return book
+            $(document).on('click', '.return-book', function () {
+                const loanId = $(this).data('loan-id');
+                const button = $(this);
+                
+                if (confirm('Are you sure you want to mark this book as returned?')) {
+                    $.ajax({
+                        url: '@Url.Action("ReturnBook", "Admin")',
+                        type: 'POST',
+                        data: { loanId: loanId },
+                        beforeSend: function () {
+                            button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Processing...');
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showAlert('Book returned successfully! Late fee: $' + response.lateFee, 'success');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 1500);
+                            } else {
+                                showAlert(response.message, 'danger');
+                                button.prop('disabled', false).html('<i class="bi bi-check-circle"></i> Return');
+                            }
+                        },
+                        error: function () {
+                            showAlert('Failed to return book', 'danger');
+                            button.prop('disabled', false).html('<i class="bi bi-check-circle"></i> Return');
+                        }
+                    });
+                }
+            });
+
+            function showAlert(message, type) {
+                const alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    '</div>';
+                
+                $('.container').prepend(alertHtml);
+                
+                setTimeout(function () {
+                    $('.alert').fadeOut();
+                }, 3000);
+            }
+        });
+    </script>
+}

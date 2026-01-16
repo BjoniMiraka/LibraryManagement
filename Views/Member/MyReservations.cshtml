@@ -1,0 +1,122 @@
+@model IEnumerable<LibraryManagementSystem.Models.Reservation>
+
+@{
+    ViewData["Title"] = "My Reservations";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">My Reservations</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> You don't have any reservations.
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Reservation Date</th>
+                                <th>Expiry Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var reservation in Model)
+                            {
+                                var statusClass = reservation.Status == ReservationStatus.Pending ? "info" :
+                                                reservation.Status == ReservationStatus.Fulfilled ? "success" :
+                                                reservation.Status == ReservationStatus.Cancelled ? "secondary" : "danger";
+
+                                <tr>
+                                    <td>
+                                        <strong>@reservation.Book.Title</strong><br>
+                                        <small class="text-muted">ISBN: @reservation.Book.ISBN</small>
+                                    </td>
+                                    <td>@reservation.ReservationDate.ToString()</td>
+                                    <td>@reservation.ExpiryDate.ToString()
+                                    <td><span class="badge bg-@statusClass">@reservation.Status</span></td>
+                                    <td>
+                                        @if (reservation.Status == ReservationStatus.Pending)
+                                        {
+                                            <button class="btn btn-sm btn-danger cancel-reservation" data-reservation-id="@reservation.ReservationId">
+                                                <i class="bi bi-x-circle"></i> Cancel
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="mt-3">
+        <a asp-action="Dashboard" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.cancel-reservation').click(function () {
+                const reservationId = $(this).data('reservation-id');
+                const button = $(this);
+
+                if (confirm('Are you sure you want to cancel this reservation?')) {
+                    $.ajax({
+                        url: '@Url.Action("CancelReservation", "Member")',
+                        type: 'POST',
+                        data: { reservationId: reservationId },
+                        beforeSend: function () {
+                            button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showAlert(response.message, 'success');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 1500);
+                            } else {
+                                showAlert(response.message, 'danger');
+                                button.prop('disabled', false).html('<i class="bi bi-x-circle"></i> Cancel');
+                            }
+                        },
+                        error: function () {
+                            showAlert('Failed to cancel reservation', 'danger');
+                            button.prop('disabled', false).html('<i class="bi bi-x-circle"></i> Cancel');
+                        }
+                    });
+                }
+            });
+
+            function showAlert(message, type) {
+                const alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    '</div>';
+
+                $('.container').prepend(alertHtml);
+
+                setTimeout(function () {
+                    $('.alert').fadeOut();
+                }, 3000);
+            }
+        });
+    </script>
+}

@@ -94,6 +94,23 @@
                 <a asp-action="Index" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Back to List
                 </a>
+                
+                @if (User.IsInRole("Member") || User.IsInRole("Librarian") || User.IsInRole("Admin"))
+                {
+                    @if (Model.AvailableCopies > 0)
+                    {
+                        <button id="borrowBook" class="btn btn-success" data-book-id="@Model.BookId">
+                            <i class="bi bi-book"></i> Borrow This Book
+                        </button>
+                    }
+                    else
+                    {
+                        <button id="reserveBook" class="btn btn-info" data-book-id="@Model.BookId">
+                            <i class="bi bi-bookmark"></i> Reserve This Book
+                        </button>
+                    }
+                }
+                
                 @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
                 {
                     <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-warning">
@@ -111,3 +128,83 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#borrowBook').click(function () {
+                const bookId = $(this).data('book-id');
+                const button = $(this);
+
+                if (confirm('Are you sure you want to borrow this book? You will have 14 days to return it.')) {
+                    $.ajax({
+                        url: '@Url.Action("BorrowBook", "Member")',
+                        type: 'POST',
+                        data: { bookId: bookId },
+                        beforeSend: function () {
+                            button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Processing...');
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showAlert(response.message + ' Due date: ' + response.dueDate, 'success');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            } else {
+                                showAlert(response.message, 'warning');
+                                button.prop('disabled', false).html('<i class="bi bi-book"></i> Borrow This Book');
+                            }
+                        },
+                        error: function () {
+                            showAlert('Failed to borrow book. Please try again.', 'danger');
+                            button.prop('disabled', false).html('<i class="bi bi-book"></i> Borrow This Book');
+                        }
+                    });
+                }
+            });
+
+            $('#reserveBook').click(function () {
+                const bookId = $(this).data('book-id');
+                const button = $(this);
+
+                if (confirm('Are you sure you want to reserve this book? You will be notified when it becomes available.')) {
+                    $.ajax({
+                        url: '@Url.Action("ReserveBook", "Member")',
+                        type: 'POST',
+                        data: { bookId: bookId },
+                        beforeSend: function () {
+                            button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Processing...');
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showAlert(response.message, 'success');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            } else {
+                                showAlert(response.message, 'warning');
+                                button.prop('disabled', false).html('<i class="bi bi-bookmark"></i> Reserve This Book');
+                            }
+                        },
+                        error: function () {
+                            showAlert('Failed to reserve book. Please try again.', 'danger');
+                            button.prop('disabled', false).html('<i class="bi bi-bookmark"></i> Reserve This Book');
+                        }
+                    });
+                }
+            });
+
+            function showAlert(message, type) {
+                const alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show mt-3" role="alert">' +
+                    message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    '</div>';
+
+                $('.container').prepend(alertHtml);
+
+                setTimeout(function () {
+                    $('.alert').fadeOut();
+                }, 5000);
+            }
+        });
+    </script>
+}

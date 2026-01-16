@@ -1,0 +1,64 @@
+@model LibraryManagementSystem.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">My Profile</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Personal Information</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Name</dt>
+                        <dd class="col-sm-8">@Model.FirstName @Model.LastName</dd>
+
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+
+                        <dt class="col-sm-4">Phone Number</dt>
+                        <dd class="col-sm-8">@(Model.PhoneNumber ?? "Not provided")</dd>
+
+                        <dt class="col-sm-4">Address</dt>
+                        <dd class="col-sm-8">@(Model.Address ?? "Not provided")</dd>
+
+                        <dt class="col-sm-4">Date of Birth</dt>
+                        <dd class="col-sm-8">@Model.DateOfBirth.ToString("yyyy-MM-dd")</dd>
+
+                        <dt class="col-sm-4">Member Since</dt>
+                        <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Account Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Dashboard" class="btn btn-primary">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                        <a asp-action="MyLoans" class="btn btn-outline-primary">
+                            <i class="bi bi-journal-check"></i> My Loans
+                        </a>
+                        <a asp-action="MyReservations" class="btn btn-outline-primary">
+                            <i class="bi bi-bookmark"></i> My Reservations
+                        </a>
+                        <a asp-controller="Books" asp-action="Index" class="btn btn-outline-primary">
+                            <i class="bi bi-book"></i> Browse Books
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

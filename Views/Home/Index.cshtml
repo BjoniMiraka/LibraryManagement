@@ -79,6 +79,19 @@
                     </div>
                 </a>
             </div>
+            @if (User.IsInRole("Member") || User.IsInRole("Librarian") || User.IsInRole("Admin"))
+            {
+                <div class="col-md-3">
+                    <a asp-controller="Member" asp-action="Dashboard" class="text-decoration-none">
+                        <div class="card text-white bg-secondary mb-3">
+                            <div class="card-body text-center">
+                                <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">My Dashboard</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
             @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
             {
                 <div class="col-md-3">
