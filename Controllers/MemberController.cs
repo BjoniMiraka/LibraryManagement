@@ -193,6 +193,46 @@ namespace LibraryManagementSystem.Controllers
             return Json(new { success = false, message = "Failed to cancel reservation" });
         }
 
+        // POST: Member/MarkAsReturned
+        [HttpPost]
+        public async Task<JsonResult> MarkAsReturned(int loanId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { success = false, message = "User not found" });
+            }
+
+            var loan = await _loanService.GetLoanByIdAsync(loanId);
+            if (loan == null || loan.UserId != user.Id)
+            {
+                return Json(new { success = false, message = "Loan not found" });
+            }
+
+            if (loan.Status != LoanStatus.Active)
+            {
+                return Json(new { success = false, message = "This loan is not active" });
+            }
+
+            // Return the book
+            var result = await _loanService.ReturnBookAsync(loanId);
+            if (result)
+            {
+                var updatedLoan = await _loanService.GetLoanByIdAsync(loanId);
+                var lateFeeMessage = updatedLoan?.LateFee > 0 
+                    ? $"Late fee: ${updatedLoan.LateFee:F2}" 
+                    : "No late fee!";
+                
+                return Json(new
+                {
+                    success = true,
+                    message = lateFeeMessage
+                });
+            }
+
+            return Json(new { success = false, message = "Failed to mark as returned" });
+        }
+
         // GET: Member/Profile
         public async Task<IActionResult> Profile()
         {
@@ -203,6 +243,51 @@ namespace LibraryManagementSystem.Controllers
             }
 
             return View(user);
+        }
+
+        // GET: Member/EditProfile
+        public async Task<IActionResult> EditProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            return View(user);
+        }
+
+        // POST: Member/EditProfile
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProfile(ApplicationUser model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Update only allowed fields
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Address = model.Address;
+            user.PhoneNumber = model.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Profile updated successfully!";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
         }
     }
 }

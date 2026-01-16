@@ -186,18 +186,9 @@
                 }
             });
 
-            // Helper function to show alerts
+            // Use global toast function from site.js
             function showAlert(message, type) {
-                const alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
-                    message +
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                    '</div>';
-                
-                $('.container').prepend(alertHtml);
-                
-                setTimeout(function () {
-                    $('.alert').fadeOut();
-                }, 3000);
+                showToast(message, type, 3000);
             }
         });
     </script>

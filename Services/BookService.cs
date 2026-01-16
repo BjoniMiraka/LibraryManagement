@@ -31,6 +31,8 @@ namespace LibraryManagementSystem.Services
                 .Include(b => b.Publisher)
                 .Include(b => b.BookAuthors)
                     .ThenInclude(ba => ba.Author)
+                .Include(b => b.Loans)
+                .Include(b => b.Reservations)
                 .FirstOrDefaultAsync(b => b.BookId == id);
         }
 

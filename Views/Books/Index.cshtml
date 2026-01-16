@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Books";
     var categories = ViewBag.Categories as IEnumerable<LibraryManagementSystem.Models.Category>;
+    var userBorrowedBookIds = ViewBag.UserBorrowedBookIds as List<int> ?? new List<int>();
 }
 
 <div class="container mt-4">
@@ -57,11 +58,57 @@
     </div>
 
     <!-- Books Grid -->
-    <div class="row">
-        @foreach (var book in Model)
+    @if (!Model.Any())
+    {
+        <!-- Empty State -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card text-center py-5">
+                    <div class="card-body">
+                        <i class="bi bi-book" style="font-size: 5rem; color: #d1d5db;"></i>
+                        <h3 class="mt-4">No Books Found</h3>
+                        <p class="text-muted">
+                            @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string) || ViewBag.CategoryId != null)
+                            {
+                                <span>No books match your search criteria. Try adjusting your filters.</span>
+                            }
+                            else
+                            {
+                                <span>The library doesn't have any books yet.</span>
+                            }
+                        </p>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                        {
+                            <a asp-action="Create" class="btn btn-primary btn-lg mt-3">
+                                <i class="bi bi-plus-circle"></i> Add Your First Book
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Index" class="btn btn-secondary mt-3">
+                                <i class="bi bi-arrow-clockwise"></i> Clear Filters
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var book in Model)
         {
+            var userHasThisBook = userBorrowedBookIds.Contains(book.BookId);
+            
             <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
+                <div class="card book-card h-100 @(userHasThisBook ? "border-primary border-3" : "")">
+                    @if (userHasThisBook)
+                    {
+                        <div class="borrowed-indicator">
+                            <i class="bi bi-check-circle-fill"></i> You Have This
+                        </div>
+                    }
                     @if (!string.IsNullOrEmpty(book.CoverImageUrl))
                     {
                         <img src="@book.CoverImageUrl" class="card-img-top" alt="@book.Title" style="height: 250px; object-fit: cover;">
@@ -82,34 +129,54 @@
                                 <strong>Year:</strong> @book.PublishedYear
                             </small>
                         </p>
-                        <div class="mb-2">
-                            @if (book.AvailableCopies > 0)
+                        <div class="mb-3">
+                            @if (userHasThisBook)
                             {
-                                <span class="badge bg-success">Available (@book.AvailableCopies/@book.TotalCopies)</span>
+                                <span class="status-borrowed">
+                                    <i class="bi bi-check-circle"></i> You're Reading This
+                                </span>
+                            }
+                            else if (book.AvailableCopies > 0)
+                            {
+                                <span class="status-available">
+                                    <i class="bi bi-check"></i> @book.AvailableCopies Available
+                                </span>
                             }
                             else
                             {
-                                <span class="badge bg-danger">Not Available</span>
+                                <span class="status-unavailable">
+                                    <i class="bi bi-x"></i> All Borrowed
+                                </span>
                             }
                         </div>
                     </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="btn-group w-100" role="group">
-                            <a asp-action="Details" asp-route-id="@book.BookId" class="btn btn-sm btn-outline-primary">Details</a>
+                    <div class="card-footer bg-white border-0">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Details" asp-route-id="@book.BookId" class="btn btn-primary">
+                                <i class="bi bi-eye"></i> View Details
+                            </a>
                             @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
                             {
-                                <a asp-action="Edit" asp-route-id="@book.BookId" class="btn btn-sm btn-outline-warning">Edit</a>
-                            }
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a asp-action="Delete" asp-route-id="@book.BookId" class="btn btn-sm btn-outline-danger">Delete</a>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@book.BookId" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@book.BookId" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    }
+                                </div>
                             }
                         </div>
                     </div>
                 </div>
             </div>
         }
-    </div>
+        </div>
+    }
+
 
     <!-- Pagination -->
     @if (ViewBag.TotalPages > 1)

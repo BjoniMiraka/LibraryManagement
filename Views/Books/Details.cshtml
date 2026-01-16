@@ -2,127 +2,223 @@
 
 @{
     ViewData["Title"] = "Book Details";
+    var userHasActiveLoan = (bool)(ViewBag.UserHasActiveLoan ?? false);
+    var userHasReservation = (bool)(ViewBag.UserHasReservation ?? false);
 }
 
 <div class="container mt-4">
     <div class="row">
+        <!-- Book Cover Section -->
         <div class="col-md-4">
-            @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
-            {
-                <img src="@Model.CoverImageUrl" class="img-fluid rounded shadow" alt="@Model.Title" />
-            }
-            else
-            {
-                <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded shadow" style="height: 400px;">
-                    <i class="bi bi-book" style="font-size: 6rem;"></i>
-                </div>
-            }
+            <div class="card border-0 shadow-lg">
+                @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+                {
+                    <img src="@Model.CoverImageUrl" class="card-img-top rounded" alt="@Model.Title" style="height: 500px; object-fit: cover;">
+                }
+                else
+                {
+                    <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center rounded" style="height: 500px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="bi bi-book" style="font-size: 8rem; color: white; opacity: 0.8;"></i>
+                    </div>
+                }
+            </div>
             
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5>Availability</h5>
+            <!-- Availability Card -->
+            <div class="card mt-3 border-0 shadow">
+                <div class="card-body text-center">
                     @if (Model.AvailableCopies > 0)
                     {
-                        <span class="badge bg-success fs-6">Available</span>
-                        <p class="mt-2">@Model.AvailableCopies of @Model.TotalCopies copies available</p>
+                        <div class="mb-3">
+                            <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: var(--success-color);"></i>
+                        </div>
+                        <h5 class="text-success mb-2">Available Now!</h5>
+                        <p class="mb-0">
+                            <strong class="fs-4">@Model.AvailableCopies</strong> of <strong>@Model.TotalCopies</strong> copies
+                        </p>
                     }
                     else
                     {
-                        <span class="badge bg-danger fs-6">Not Available</span>
-                        <p class="mt-2">All @Model.TotalCopies copies are currently on loan</p>
+                        <div class="mb-3">
+                            <i class="bi bi-x-circle-fill" style="font-size: 3rem; color: var(--danger-color);"></i>
+                        </div>
+                        <h5 class="text-danger mb-2">All Borrowed</h5>
+                        <p class="mb-0">
+                            <strong>@Model.TotalCopies</strong> copies (all on loan)
+                        </p>
                     }
                 </div>
             </div>
-        </div>
-        
-        <div class="col-md-8">
-            <h1>@Model.Title</h1>
-            <hr />
-            
-            <dl class="row">
-                <dt class="col-sm-3">ISBN</dt>
-                <dd class="col-sm-9">@Model.ISBN</dd>
-                
-                <dt class="col-sm-3">Category</dt>
-                <dd class="col-sm-9">
-                    <span class="badge bg-primary">@Model.Category.Name</span>
-                </dd>
-                
-                <dt class="col-sm-3">Publisher</dt>
-                <dd class="col-sm-9">@Model.Publisher.Name</dd>
-                
-                <dt class="col-sm-3">Published Year</dt>
-                <dd class="col-sm-9">@Model.PublishedYear</dd>
-                
-                @if (Model.BookAuthors.Any())
-                {
-                    <dt class="col-sm-3">Authors</dt>
-                    <dd class="col-sm-9">
-                        @string.Join(", ", Model.BookAuthors.Select(ba => ba.Author.FullName))
-                    </dd>
-                }
-                
-                <dt class="col-sm-3">Total Copies</dt>
-                <dd class="col-sm-9">@Model.TotalCopies</dd>
-                
-                <dt class="col-sm-3">Available Copies</dt>
-                <dd class="col-sm-9">@Model.AvailableCopies</dd>
-                
-                <dt class="col-sm-3">Created At</dt>
-                <dd class="col-sm-9">@Model.CreatedAt.ToString("MMMM dd, yyyy")</dd>
-                
-                @if (Model.UpdatedAt.HasValue)
-                {
-                    <dt class="col-sm-3">Last Updated</dt>
-                    <dd class="col-sm-9">@Model.UpdatedAt.Value.ToString("MMMM dd, yyyy")</dd>
-                }
-            </dl>
-            
-            @if (!string.IsNullOrEmpty(Model.Description))
+
+            <!-- User Status Card -->
+            @if (User.Identity!.IsAuthenticated && (userHasActiveLoan || userHasReservation))
             {
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h5 class="mb-0">Description</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>@Model.Description</p>
+                <div class="card mt-3 border-0 shadow">
+                    <div class="card-body text-center">
+                        @if (userHasActiveLoan)
+                        {
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 2.5rem;"></i>
+                            <h5 class="mt-3 text-success">You're Reading This!</h5>
+                            <p class="text-muted mb-3">Check your loans for the due date</p>
+                            <a asp-controller="Member" asp-action="MyLoans" class="btn btn-success w-100">
+                                <i class="bi bi-journal-check"></i> View My Loans
+                            </a>
+                        }
+                        else if (userHasReservation)
+                        {
+                            <i class="bi bi-bookmark-fill text-info" style="font-size: 2.5rem;"></i>
+                            <h5 class="mt-3 text-info">You're in Line!</h5>
+                            <p class="text-muted mb-3">We'll notify you when available</p>
+                            <a asp-controller="Member" asp-action="MyReservations" class="btn btn-info w-100">
+                                <i class="bi bi-bookmark"></i> View Reservations
+                            </a>
+                        }
                     </div>
                 </div>
             }
-            
-            <div class="mt-4">
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to List
-                </a>
-                
-                @if (User.IsInRole("Member") || User.IsInRole("Librarian") || User.IsInRole("Admin"))
-                {
-                    @if (Model.AvailableCopies > 0)
+        </div>
+        
+        <!-- Book Information Section -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-4">
+                    <h1 class="display-5 fw-bold mb-3">@Model.Title</h1>
+                    
+                    @if (Model.BookAuthors.Any())
                     {
-                        <button id="borrowBook" class="btn btn-success" data-book-id="@Model.BookId">
-                            <i class="bi bi-book"></i> Borrow This Book
-                        </button>
+                        <p class="lead text-muted mb-4">
+                            <i class="bi bi-person-fill"></i>
+                            by @string.Join(", ", Model.BookAuthors.Select(ba => ba.Author.FullName))
+                        </p>
                     }
-                    else
+                    
+                    <hr class="my-4">
+                    
+                    <!-- Book Metadata -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-upc-scan fs-4 text-primary me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">ISBN</small>
+                                    <strong>@Model.ISBN</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar-event fs-4 text-primary me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Published</small>
+                                    <strong>@Model.PublishedYear</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-tag fs-4 text-primary me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Category</small>
+                                    <span class="badge bg-primary">@Model.Category.Name</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-building fs-4 text-primary me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Publisher</small>
+                                    <strong>@Model.Publisher.Name</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Description -->
+                    @if (!string.IsNullOrEmpty(Model.Description))
                     {
-                        <button id="reserveBook" class="btn btn-info" data-book-id="@Model.BookId">
-                            <i class="bi bi-bookmark"></i> Reserve This Book
-                        </button>
+                        <div class="mb-4">
+                            <h5 class="mb-3"><i class="bi bi-book-half"></i> About This Book</h5>
+                            <p class="text-muted">@Model.Description</p>
+                        </div>
                     }
-                }
-                
-                @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
-                {
-                    <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-warning">
-                        <i class="bi bi-pencil"></i> Edit
-                    </a>
-                }
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-danger">
-                        <i class="bi bi-trash"></i> Delete
-                    </a>
-                }
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        @if (User.Identity!.IsAuthenticated && (User.IsInRole("Member") || User.IsInRole("Librarian") || User.IsInRole("Admin")))
+                        {
+                            @if (userHasActiveLoan)
+                            {
+                                <!-- Already borrowed - show status -->
+                                <div class="alert alert-success border-0 shadow-sm">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <strong>You already have this book!</strong> Check "My Loans" to see when it's due.
+                                </div>
+                            }
+                            else if (userHasReservation)
+                            {
+                                <!-- Already reserved - show status -->
+                                <div class="alert alert-info border-0 shadow-sm">
+                                    <i class="bi bi-bookmark-fill"></i>
+                                    <strong>You're in the waiting list!</strong> We'll notify you when it's available.
+                                </div>
+                            }
+                            else
+                            {
+                                <!-- Can borrow or reserve -->
+                                @if (Model.AvailableCopies > 0)
+                                {
+                                    <button id="borrowBook" class="btn btn-success btn-lg shadow" data-book-id="@Model.BookId">
+                                        <i class="bi bi-book"></i> Borrow This Book
+                                    </button>
+                                    <small class="text-muted text-center">
+                                        <i class="bi bi-info-circle"></i> 
+                                        Pick up from library • 14 days loan • $1/day late fee
+                                    </small>
+                                }
+                                else
+                                {
+                                    <button id="reserveBook" class="btn btn-info btn-lg shadow" data-book-id="@Model.BookId">
+                                        <i class="bi bi-bookmark"></i> Reserve This Book
+                                    </button>
+                                    <small class="text-muted text-center">
+                                        <i class="bi bi-info-circle"></i> 
+                                        Join waiting list • 7 days to pick up when available
+                                    </small>
+                                }
+                            }
+                        }
+                        else if (!User.Identity!.IsAuthenticated)
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg shadow">
+                                <i class="bi bi-box-arrow-in-right"></i> Login to Borrow
+                            </a>
+                            <small class="text-muted text-center">
+                                <i class="bi bi-info-circle"></i> 
+                                You need an account to borrow books
+                            </small>
+                        }
+                        
+                        <!-- Admin Actions -->
+                        @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                        {
+                            <div class="btn-group mt-3" role="group">
+                                <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-warning">
+                                    <i class="bi bi-pencil"></i> Edit Book
+                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-danger">
+                                        <i class="bi bi-trash"></i> Delete Book
+                                    </a>
+                                }
+                            </div>
+                        }
+                        
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Library
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -131,11 +227,12 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            // Borrow book
             $('#borrowBook').click(function () {
                 const bookId = $(this).data('book-id');
                 const button = $(this);
 
-                if (confirm('Are you sure you want to borrow this book? You will have 14 days to return it.')) {
+                if (confirm('Borrow this book?\n\n✓ Pick up from library\n✓ 14 days to read\n✓ $1/day late fee\n\nContinue?')) {
                     $.ajax({
                         url: '@Url.Action("BorrowBook", "Member")',
                         type: 'POST',
@@ -145,7 +242,7 @@
                         },
                         success: function (response) {
                             if (response.success) {
-                                showAlert(response.message + ' Due date: ' + response.dueDate, 'success');
+                                showAlert('✓ Success! Book borrowed until ' + response.dueDate + '\n\nGo to the library to pick it up!', 'success');
                                 setTimeout(function () {
                                     location.reload();
                                 }, 2000);
@@ -162,11 +259,12 @@
                 }
             });
 
+            // Reserve book
             $('#reserveBook').click(function () {
                 const bookId = $(this).data('book-id');
                 const button = $(this);
 
-                if (confirm('Are you sure you want to reserve this book? You will be notified when it becomes available.')) {
+                if (confirm('Reserve this book?\n\n✓ Join waiting list\n✓ Get notified when available\n✓ 7 days to pick up\n\nContinue?')) {
                     $.ajax({
                         url: '@Url.Action("ReserveBook", "Member")',
                         type: 'POST',
@@ -176,7 +274,7 @@
                         },
                         success: function (response) {
                             if (response.success) {
-                                showAlert(response.message, 'success');
+                                showAlert('✓ Reserved! You\'re in the waiting list.\n\nWe\'ll notify you when it\'s available.', 'success');
                                 setTimeout(function () {
                                     location.reload();
                                 }, 2000);
@@ -193,17 +291,9 @@
                 }
             });
 
+            // Use global toast function from site.js
             function showAlert(message, type) {
-                const alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show mt-3" role="alert">' +
-                    message +
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                    '</div>';
-
-                $('.container').prepend(alertHtml);
-
-                setTimeout(function () {
-                    $('.alert').fadeOut();
-                }, 5000);
+                showToast(message, type, 4000);
             }
         });
     </script>

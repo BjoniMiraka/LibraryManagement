@@ -14,17 +14,20 @@ namespace LibraryManagementSystem.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IPublisherService _publisherService;
         private readonly IAuthorService _authorService;
+        private readonly ILoanService _loanService;
 
         public BooksController(
             IBookService bookService,
             ICategoryService categoryService,
             IPublisherService publisherService,
-            IAuthorService authorService)
+            IAuthorService authorService,
+            ILoanService loanService)
         {
             _bookService = bookService;
             _categoryService = categoryService;
             _publisherService = publisherService;
             _authorService = authorService;
+            _loanService = loanService;
         }
 
         // GET: Books
@@ -63,6 +66,20 @@ namespace LibraryManagementSystem.Controllers
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             books = books.Skip((page - 1) * pageSize).Take(pageSize);
 
+            // Get user's active loans if authenticated
+            if (User.Identity!.IsAuthenticated)
+            {
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var userLoans = await _loanService.GetLoansByUserAsync(userId);
+                    ViewBag.UserBorrowedBookIds = userLoans
+                        .Where(l => l.Status == LoanStatus.Active)
+                        .Select(l => l.BookId)
+                        .ToList();
+                }
+            }
+            
             // Pass data to view
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
@@ -83,6 +100,18 @@ namespace LibraryManagementSystem.Controllers
             {
                 return NotFound();
             }
+            
+            // Check if current user has already borrowed this book
+            if (User.Identity!.IsAuthenticated)
+            {
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    ViewBag.UserHasActiveLoan = book.Loans?.Any(l => l.UserId == userId && l.Status == LoanStatus.Active) ?? false;
+                    ViewBag.UserHasReservation = book.Reservations?.Any(r => r.UserId == userId && r.Status == ReservationStatus.Pending) ?? false;
+                }
+            }
+            
             return View(book);
         }
 
