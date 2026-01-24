@@ -263,19 +263,6 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
         },
         new Book
         {
-            Title = "Clean Code",
-            ISBN = "978-0132350884",
-            PublishedYear = 2008,
-            Description = "A Handbook of Agile Software Craftsmanship with practical advice on writing clean, maintainable code.",
-            TotalCopies = 4,
-            AvailableCopies = 1,
-            CategoryId = categoryLookup["Technology"].CategoryId,
-            PublisherId = publisherLookup["O'Reilly Media"].PublisherId,
-            CoverImageUrl = "https://i.pinimg.com/1200x/46/9c/88/469c88b9354e6ea64cd46a4669993736.jpg",
-            CreatedAt = DateTime.UtcNow
-        },
-        new Book
-        {
             Title = "Animal Farm",
             ISBN = "978-0451526342",
             PublishedYear = 1945,
@@ -297,8 +284,7 @@ async Task SeedDummyDataAsync(ApplicationDbContext context)
         new BookAuthor { BookId = books[0].BookId, AuthorId = authorLookup["Orwell"].AuthorId, CreatedAt = DateTime.UtcNow }, // 1984 - George Orwell
         new BookAuthor { BookId = books[1].BookId, AuthorId = authorLookup["Austen"].AuthorId, CreatedAt = DateTime.UtcNow }, // Pride and Prejudice - Jane Austen
         new BookAuthor { BookId = books[2].BookId, AuthorId = authorLookup["Hawking"].AuthorId, CreatedAt = DateTime.UtcNow }, // A Brief History of Time - Stephen Hawking
-        new BookAuthor { BookId = books[3].BookId, AuthorId = authorLookup["Martin"].AuthorId, CreatedAt = DateTime.UtcNow }, // Clean Code - Robert C. Martin
-        new BookAuthor { BookId = books[4].BookId, AuthorId = authorLookup["Orwell"].AuthorId, CreatedAt = DateTime.UtcNow }  // Animal Farm - George Orwell
+        new BookAuthor { BookId = books[3].BookId, AuthorId = authorLookup["Orwell"].AuthorId, CreatedAt = DateTime.UtcNow }  // Animal Farm - George Orwell
     };
     context.BookAuthors.AddRange(bookAuthors);
     await context.SaveChangesAsync();
