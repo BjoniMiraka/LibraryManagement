@@ -18,7 +18,7 @@ namespace LibraryManagementSystem.ViewModels
         public string ISBN { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Published year is required")]
-        [Range(1000, 2100, ErrorMessage = "Please enter a valid year")]
+        [Range(1900, 2026, ErrorMessage = "Please enter a valid year")]
         [Display(Name = "Published Year")]
         public int PublishedYear { get; set; }
 
